@@ -13,14 +13,23 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Montserrat:wght@400;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#f5f4ef;--bg-elev:#fff;--bg-deep:#ecebe5;
-  --ink:#0a0a0f;--ink-soft:#2a2a33;--ink-mute:#6b6b75;--ink-faint:#a8a8b0;
-  --rule:rgba(10,10,15,.12);--rule-soft:rgba(10,10,15,.06);
-  --accent:#0014ff;--accent-bright:#2040ff;
-  --accent-wash:rgba(0,20,255,.06);--accent-dim:rgba(0,20,255,.18);
-  --card-bg:#fff;--card-border:rgba(10,10,15,.08);
-  --radius:.5rem;--radius-lg:1rem;--max:38rem;
-  --ease:cubic-bezier(.4,0,.2,1);
+  --background:#f5f4ef;
+  --background-elevated:#fff;
+  --background-deep:#ecebe5;
+  --ink:#0a0a0f;
+  --ink-soft:#2a2a33;
+  --ink-mute:#6b6b75;
+  --ink-faint:#a8a8b0;
+  --rule:rgba(10,10,15,.12);
+  --rule-soft:rgba(10,10,15,.06);
+  --accent:#0014ff;
+  --accent-bright:#2040ff;
+  --accent-soft:#6a80ff;
+  --accent-wash:rgba(0,20,255,.06);
+  --accent-dim:rgba(0,20,255,.18);
+  --card-bg:#fff;
+  --card-border:rgba(10,10,15,.08);
+  --ease:cubic-bezier(.25,.46,.45,.94);
   --font-display:"Montserrat","Montserrat Fallback",system-ui,sans-serif;
   --font-body:"DM Sans","DM Sans Fallback",system-ui,sans-serif;
   --font-mono:"JetBrains Mono","JetBrains Mono Fallback",ui-monospace,monospace;
@@ -28,136 +37,194 @@
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{
-  margin:0;background:var(--bg);color:var(--ink);
+  margin:0;background:var(--background);color:var(--ink);
   font-family:var(--font-body);font-size:1rem;line-height:1.5;
   -webkit-font-smoothing:antialiased;
   min-height:100vh;min-height:100dvh;
   display:flex;flex-direction:column;
+  position:relative;
 }
 a{color:inherit;text-decoration:none}
 button,input,select{font:inherit;color:inherit}
 ::selection{background:var(--accent);color:#fff}
 
-.container{width:100%;max-width:var(--max);margin:0 auto;padding:0 1.25rem}
+/* BACKGROUND TEXTURE */
+.bg-mesh{z-index:-2;background:var(--background);position:fixed;inset:0;pointer-events:none}
+.halftone{
+  z-index:-1;pointer-events:none;opacity:.7;
+  background-image:radial-gradient(circle,rgba(10,10,15,.04) .5px,transparent .6px);
+  background-size:22px 22px;
+  position:fixed;inset:0;
+  -webkit-mask-image:radial-gradient(80% 70% at 50% 40%,#000 30%,transparent 90%);
+  mask-image:radial-gradient(80% 70% at 50% 40%,#000 30%,transparent 90%);
+}
+.noise-overlay{
+  z-index:0;pointer-events:none;opacity:.02;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-repeat:repeat;background-size:256px 256px;
+  position:fixed;inset:0;
+}
 
-/* HEADER + PROGRESS */
+.container{
+  width:100%;max-width:42rem;margin:0 auto;
+  padding:0 1.5rem;
+}
+
+/* TOP BAR */
 .bar-top{
   position:sticky;top:0;z-index:20;
-  background:rgba(245,244,239,.92);
+  background:rgba(245,244,239,.9);
   backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
   border-bottom:1px solid var(--rule-soft);
 }
 .bar-top .container{
   display:flex;align-items:center;justify-content:space-between;
-  padding:.875rem 1.25rem;
+  padding:1.125rem 1.5rem;
 }
 .brand{
-  display:flex;align-items:center;gap:.5rem;
-  font-family:var(--font-display);font-weight:800;font-size:1rem;letter-spacing:-.015em;
+  display:flex;align-items:center;gap:.625rem;
 }
-.brand-mark{
-  width:1.5rem;height:1.5rem;border-radius:.375rem;
-  background:var(--ink);color:#fff;
-  display:grid;place-items:center;
-  font-family:var(--font-mono);font-size:.8125rem;font-weight:700;
+.accent-bar{
+  background:var(--accent);
+  width:6px;height:18px;display:inline-block;
+}
+.brand-name{
+  font-family:var(--font-display);font-weight:800;
+  font-size:1.0625rem;letter-spacing:-.02em;
+  color:var(--ink);line-height:1;
+}
+.brand-suffix{
+  font-family:var(--font-mono);font-size:10px;
+  letter-spacing:.25em;text-transform:uppercase;
+  color:var(--ink-mute);
 }
 .step-counter{
-  font-family:var(--font-mono);font-size:.6875rem;font-weight:500;
-  color:var(--ink-mute);letter-spacing:.08em;text-transform:uppercase;
+  font-family:var(--font-mono);font-size:11px;font-weight:500;
+  color:var(--ink-mute);letter-spacing:.2em;text-transform:uppercase;
 }
 .progress{
-  height:3px;background:var(--rule-soft);overflow:hidden;
+  height:2px;background:transparent;overflow:hidden;
 }
 .progress-fill{
   height:100%;background:var(--accent);
-  width:0%;transition:width .4s var(--ease);
+  width:0%;transition:width .5s var(--ease);
+  box-shadow:0 0 12px rgba(0,20,255,.4);
 }
 
-main{flex:1;display:flex;flex-direction:column;padding:1.5rem 0 6rem}
+main{flex:1;display:flex;flex-direction:column;padding:2rem 0 7rem;position:relative;z-index:1}
 
 /* SCREENS */
-.screen{display:none;animation:fadeIn .35s var(--ease)}
-.screen.active{display:flex;flex-direction:column;gap:1.25rem}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.screen{display:none;animation:fadeIn .45s var(--ease)}
+.screen.active{display:flex;flex-direction:column;gap:1.5rem}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 
+/* TYPOGRAPHY */
 .eyebrow{
-  display:inline-flex;align-items:center;gap:.5rem;
-  font-family:var(--font-mono);font-size:.75rem;font-weight:500;
-  letter-spacing:.05em;text-transform:uppercase;color:var(--ink-mute);
+  display:inline-flex;align-items:center;gap:.625rem;
+  font-family:var(--font-mono);font-size:11px;font-weight:500;
+  letter-spacing:.25em;text-transform:uppercase;color:var(--ink-mute);
+  width:max-content;
 }
-.eyebrow::before{content:"—";color:var(--ink-faint)}
-
+.eyebrow::before{
+  content:"";width:24px;height:1px;background:var(--accent);
+}
+.tag-eyebrow{
+  font-family:var(--font-display);font-weight:700;
+  letter-spacing:.25em;text-transform:uppercase;
+  color:var(--accent);font-size:11px;
+}
 h1{
   font-family:var(--font-display);font-weight:900;
-  font-size:clamp(2rem,7.5vw,2.75rem);
-  line-height:1.05;letter-spacing:-.03em;margin:0;
+  font-size:clamp(2.25rem,8.5vw,3.5rem);
+  letter-spacing:-.05em;line-height:.92;
+  margin:0;color:var(--ink);
 }
-h1 em{font-style:normal;color:var(--accent)}
+h1 .accent{
+  -webkit-text-fill-color:transparent;color:transparent;
+  background:linear-gradient(135deg,#0014ff 0%,#2040ff 55%,#6a80ff 100%);
+  -webkit-background-clip:text;background-clip:text;
+}
 h2{
-  font-family:var(--font-display);font-weight:800;
-  font-size:clamp(1.375rem,5.5vw,1.75rem);
-  line-height:1.15;letter-spacing:-.02em;margin:0;
+  font-family:var(--font-display);font-weight:900;
+  font-size:clamp(1.5rem,5.5vw,2rem);
+  letter-spacing:-.04em;line-height:1;margin:0;
 }
-.lead{font-size:1.0625rem;color:var(--ink-soft);margin:0;line-height:1.55}
+.lead{font-size:1.0625rem;color:var(--ink-soft);margin:0;line-height:1.6;font-weight:300}
 .muted{color:var(--ink-mute);font-size:.875rem;margin:0}
+
+/* ACCENT BAR HORIZONTAL */
+.accent-bar-h{background:var(--accent);width:48px;height:3px;display:block;margin-bottom:1rem}
 
 /* INTRO */
 .intro-card{
-  background:var(--card-bg);border:1px solid var(--card-border);
-  border-radius:var(--radius-lg);padding:1.5rem;
-  display:grid;gap:1.25rem;
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  padding:2rem;
+  display:grid;gap:1.75rem;
+  position:relative;
 }
 .intro-meta{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;
-  padding:1rem;background:var(--bg-deep);border-radius:var(--radius);
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:0;
+  border-top:1px solid var(--rule);
+  border-bottom:1px solid var(--rule);
 }
-.intro-meta div{text-align:center}
-.intro-meta strong{
+.intro-meta-cell{
+  text-align:center;padding:1rem .5rem;
+  border-right:1px solid var(--rule);
+}
+.intro-meta-cell:last-child{border-right:none}
+.intro-meta-cell strong{
   display:block;font-family:var(--font-display);font-weight:900;
-  font-size:1.5rem;color:var(--ink);line-height:1;margin-bottom:.25rem;
+  font-size:1.875rem;color:var(--ink);line-height:1;
+  margin-bottom:.375rem;letter-spacing:-.02em;
 }
-.intro-meta span{
-  font-family:var(--font-mono);font-size:.6875rem;
-  color:var(--ink-mute);letter-spacing:.05em;text-transform:uppercase;
+.intro-meta-cell span{
+  font-family:var(--font-mono);font-size:10px;
+  color:var(--ink-mute);letter-spacing:.2em;text-transform:uppercase;
 }
 
 /* QUESTION */
 .q-num{
-  font-family:var(--font-mono);font-size:.6875rem;font-weight:500;
-  color:var(--accent);letter-spacing:.08em;text-transform:uppercase;
+  font-family:var(--font-mono);font-size:11px;font-weight:500;
+  color:var(--accent);letter-spacing:.25em;text-transform:uppercase;
 }
 .q-question{
-  font-family:var(--font-display);font-weight:800;
-  font-size:clamp(1.5rem,6vw,2rem);
-  line-height:1.15;letter-spacing:-.025em;margin:0;
+  font-family:var(--font-display);font-weight:900;
+  font-size:clamp(1.625rem,6.5vw,2.25rem);
+  letter-spacing:-.04em;line-height:1;margin:0;
+  color:var(--ink);
 }
 .q-hint{
-  font-family:var(--font-mono);font-size:.6875rem;
-  color:var(--ink-faint);letter-spacing:.05em;text-transform:uppercase;
+  font-family:var(--font-mono);font-size:10.5px;
+  color:var(--ink-faint);letter-spacing:.18em;text-transform:uppercase;
 }
 
 .options{display:grid;gap:.625rem}
 .option{
-  display:flex;align-items:flex-start;gap:.75rem;
-  padding:1rem 1.125rem;
-  background:var(--card-bg);border:1.5px solid var(--card-border);
-  border-radius:var(--radius);cursor:pointer;
-  transition:border-color .15s var(--ease),background .15s var(--ease),transform .1s var(--ease);
+  display:flex;align-items:flex-start;gap:.875rem;
+  padding:1.125rem 1.25rem;
+  background:var(--card-bg);
+  border:1.5px solid var(--card-border);
+  cursor:pointer;
+  transition:all .25s var(--ease);
   text-align:left;width:100%;
   font-size:.9375rem;line-height:1.4;
+  position:relative;
 }
-.option:hover{border-color:var(--ink-mute)}
+.option:hover{border-color:var(--ink-mute);transform:translateY(-1px)}
 .option:active{transform:scale(.99)}
 .option.selected{
   border-color:var(--accent);background:var(--accent-wash);
+  box-shadow:0 8px 24px -12px rgba(0,20,255,.3);
 }
 .option-mark{
   width:1.25rem;height:1.25rem;flex:0 0 auto;
   border:1.5px solid var(--rule);border-radius:50%;
   display:grid;place-items:center;margin-top:.125rem;
-  background:var(--bg);transition:all .15s var(--ease);
+  background:var(--background);transition:all .25s var(--ease);
 }
-.option.multi .option-mark{border-radius:.25rem}
+.option.multi .option-mark{border-radius:0}
 .option.selected .option-mark{
   background:var(--accent);border-color:var(--accent);
 }
@@ -169,9 +236,13 @@ h2{
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'><path d='M2 6l3 3 5-7' stroke='white' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
   background-size:contain;background-repeat:no-repeat;
 }
-.option-text{flex:1}
-.option-text strong{display:block;font-weight:600;color:var(--ink)}
-.option-text small{display:block;color:var(--ink-mute);font-size:.8125rem;margin-top:.125rem;line-height:1.35}
+.option-text{flex:1;min-width:0}
+.option-text strong{display:block;font-weight:600;color:var(--ink);font-family:var(--font-body)}
+.option-text small{
+  display:block;color:var(--ink-mute);
+  font-size:.8125rem;margin-top:.25rem;line-height:1.4;
+  font-family:var(--font-mono);letter-spacing:.02em;
+}
 
 /* NAV */
 .nav{
@@ -179,126 +250,200 @@ h2{
   background:rgba(245,244,239,.95);
   backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
   border-top:1px solid var(--rule-soft);
-  padding:.75rem 1.25rem calc(.75rem + env(safe-area-inset-bottom));
+  padding:.875rem 1.5rem calc(.875rem + env(safe-area-inset-bottom));
   display:none;
 }
-.nav.show{display:flex;gap:.625rem;justify-content:space-between;align-items:center}
-.nav .container{padding:0;display:flex;gap:.625rem;width:100%;max-width:var(--max);margin:0 auto;align-items:center}
-
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
-  font-family:var(--font-body);font-weight:600;font-size:.9375rem;
-  padding:.875rem 1.25rem;border-radius:var(--radius);
-  border:1.5px solid transparent;cursor:pointer;
-  transition:transform .15s var(--ease),background .15s var(--ease),color .15s var(--ease),border-color .15s var(--ease),opacity .15s var(--ease);
-  text-align:center;line-height:1.2;
+.nav.show{display:block}
+.nav .container{
+  padding:0;display:flex;gap:.625rem;
+  width:100%;max-width:42rem;margin:0 auto;align-items:center;
 }
-.btn:disabled{opacity:.4;cursor:not-allowed}
-.btn-primary{background:var(--ink);color:#fff;border-color:var(--ink);flex:1}
-.btn-primary:hover:not(:disabled),.btn-primary:focus-visible{background:var(--accent);border-color:var(--accent)}
-.btn-ghost{background:transparent;color:var(--ink);border-color:var(--rule)}
-.btn-ghost:hover{border-color:var(--ink);background:var(--bg-deep)}
+
+/* BUTTONS — pill */
+.btn-primary{
+  display:inline-flex;align-items:center;justify-content:center;gap:.625rem;
+  flex:1;
+  background:var(--accent);color:#fff;
+  border:1px solid var(--accent);border-radius:999px;
+  padding:14px 24px;
+  font-family:var(--font-body);font-size:14px;font-weight:600;
+  letter-spacing:.02em;
+  cursor:pointer;line-height:1.2;
+  transition:all .35s var(--ease);
+}
+.btn-primary:hover:not(:disabled),.btn-primary:focus-visible:not(:disabled){
+  background:var(--accent-bright);border-color:var(--accent-bright);
+  transform:translateY(-2px);
+  box-shadow:0 16px 40px -16px rgba(0,20,255,.55);
+}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed}
+.btn-ghost{
+  display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+  color:var(--ink);background:transparent;
+  border:1px solid var(--rule);border-radius:999px;
+  padding:14px 20px;
+  font-family:var(--font-body);font-size:14px;font-weight:600;
+  letter-spacing:.02em;
+  cursor:pointer;line-height:1.2;
+  transition:all .35s var(--ease);
+}
+.btn-ghost:hover{border-color:var(--ink);background:var(--ink);color:var(--background)}
 .btn-icon{
-  width:2.75rem;height:2.75rem;padding:0;flex:0 0 auto;
-  display:grid;place-items:center;
+  width:46px;height:46px;padding:0;flex:0 0 auto;
+  display:grid;place-items:center;font-size:1.125rem;
 }
 .btn-block{width:100%}
-.btn-wa{background:#25D366;color:#fff;border-color:#25D366;font-weight:700}
-.btn-wa:hover{background:#1DA851;border-color:#1DA851}
+.btn-wa{
+  background:#25D366;color:#fff;border-color:#25D366;font-weight:700;
+}
+.btn-wa:hover{background:#1DA851;border-color:#1DA851;box-shadow:0 16px 40px -16px rgba(37,211,102,.6)}
 .btn-wa svg{width:1.125rem;height:1.125rem}
-.btn .arrow{transition:transform .15s var(--ease)}
-.btn:hover:not(:disabled) .arrow{transform:translateX(2px)}
+.btn-arrow{transition:transform .3s var(--ease)}
+.btn-primary:hover:not(:disabled) .btn-arrow{transform:translateX(3px)}
 
 /* CAPTURE FORM */
-.field{display:grid;gap:.375rem}
+.field{display:grid;gap:.5rem}
 .field label{
-  font-family:var(--font-mono);font-size:.6875rem;font-weight:500;
-  letter-spacing:.06em;text-transform:uppercase;color:var(--ink-mute);
+  font-family:var(--font-mono);font-size:11px;font-weight:500;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--ink-mute);
 }
 .field input{
-  width:100%;padding:.875rem 1rem;
-  background:var(--bg);border:1px solid var(--rule);
-  border-radius:var(--radius);font-size:1rem;
-  transition:border-color .15s var(--ease),background .15s var(--ease);
+  width:100%;padding:1rem 1.125rem;
+  background:var(--background);
+  border:1px solid var(--rule);
+  font-size:1rem;font-family:var(--font-body);
+  transition:all .3s var(--ease);
 }
-.field input:focus{outline:none;border-color:var(--ink);background:#fff}
-.consent{font-family:var(--font-body);font-size:.75rem;color:var(--ink-mute);line-height:1.5;margin:0}
-.form-status{font-size:.875rem;padding:.75rem;border-radius:var(--radius);display:none}
-.form-status.error{display:block;background:rgba(220,38,38,.08);color:#dc2626;border:1px solid rgba(220,38,38,.2)}
-.form-status.loading{display:block;background:var(--accent-wash);color:var(--accent)}
+.field input:focus{
+  outline:none;border-color:var(--accent);background:#fff;
+  box-shadow:0 0 0 4px var(--accent-dim);
+}
+.consent{
+  font-family:var(--font-body);font-size:12px;
+  color:var(--ink-mute);line-height:1.55;font-weight:300;margin:0;
+}
+.form-status{
+  font-size:.875rem;padding:.875rem 1rem;display:none;
+  font-family:var(--font-mono);letter-spacing:.05em;
+}
+.form-status.error{
+  display:block;background:rgba(220,38,38,.08);
+  color:#dc2626;border:1px solid rgba(220,38,38,.25);
+}
+.form-status.loading{
+  display:block;background:var(--accent-wash);
+  color:var(--accent);border:1px solid var(--accent-dim);
+}
 
 /* RESULT */
 .result-hero{
   background:var(--ink);color:#fff;
-  border-radius:var(--radius-lg);padding:1.5rem;
-  display:grid;gap:.75rem;
+  padding:2rem;
+  display:grid;gap:1rem;
+  position:relative;overflow:hidden;
 }
+.result-hero::before{
+  content:"";position:absolute;
+  top:-150px;right:-150px;width:400px;height:400px;
+  background:radial-gradient(circle,rgba(0,20,255,.4) 0%,transparent 65%);
+  filter:blur(40px);pointer-events:none;
+}
+.result-hero > *{position:relative;z-index:1}
 .result-hero .eyebrow{color:rgba(255,255,255,.7)}
-.result-hero .eyebrow::before{color:rgba(255,255,255,.4)}
-.result-hero h2{color:#fff}
-.result-hero p{color:rgba(255,255,255,.85);margin:0}
-.result-pills{display:flex;flex-wrap:wrap;gap:.375rem;margin-top:.5rem}
+.result-hero .eyebrow::before{background:var(--accent-soft)}
+.result-hero h2{
+  color:#fff;
+  font-size:clamp(1.75rem,6vw,2.5rem);
+}
+.result-hero h2 .accent{
+  -webkit-text-fill-color:transparent;color:transparent;
+  background:linear-gradient(135deg,var(--accent-soft) 0%,#fff 100%);
+  -webkit-background-clip:text;background-clip:text;
+}
+.result-hero p{color:rgba(255,255,255,.85);margin:0;font-weight:300}
+.result-pills{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.75rem}
 .result-pill{
-  font-family:var(--font-mono);font-size:.6875rem;font-weight:500;
-  letter-spacing:.05em;text-transform:uppercase;
-  padding:.25rem .625rem;border-radius:999px;
-  background:rgba(255,255,255,.1);color:#fff;
+  font-family:var(--font-mono);font-size:11px;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;
+  padding:.4rem .75rem;border-radius:999px;
+  background:rgba(255,255,255,.12);color:#fff;
+  border:1px solid rgba(255,255,255,.2);
 }
 
 .recs{display:grid;gap:.75rem}
 .rec{
   background:var(--card-bg);border:1px solid var(--card-border);
-  border-radius:var(--radius-lg);padding:1.25rem;
-  display:grid;gap:.625rem;position:relative;
+  padding:1.5rem;
+  display:grid;gap:.75rem;position:relative;
+  transition:all .35s var(--ease);
 }
-.rec.top{border-color:var(--accent);background:linear-gradient(180deg,var(--accent-wash) 0%,var(--card-bg) 80%)}
-.rec-head{display:flex;align-items:center;justify-content:space-between;gap:.75rem}
+.rec:hover{border-color:var(--ink);transform:translateY(-2px);box-shadow:0 24px 60px -32px rgba(10,10,15,.25)}
+.rec.top{
+  border-color:var(--accent);
+  background:linear-gradient(180deg,var(--accent-wash) 0%,var(--card-bg) 80%);
+  box-shadow:0 16px 40px -20px rgba(0,20,255,.25);
+}
+.rec-head{display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap}
 .rec-rank{
-  font-family:var(--font-mono);font-size:.6875rem;font-weight:600;
-  color:var(--accent);letter-spacing:.08em;text-transform:uppercase;
+  font-family:var(--font-mono);font-size:11px;font-weight:600;
+  color:var(--accent);letter-spacing:.2em;text-transform:uppercase;
 }
 .rec-tag{
-  font-family:var(--font-mono);font-size:.6875rem;font-weight:500;
-  color:var(--ink-mute);background:var(--bg-deep);
-  padding:.25rem .5rem;border-radius:.25rem;letter-spacing:.04em;text-transform:uppercase;
+  font-family:var(--font-mono);font-size:10px;font-weight:500;
+  color:var(--ink-soft);background:var(--background-deep);
+  padding:.4rem .75rem;border-radius:999px;
+  letter-spacing:.18em;text-transform:uppercase;
+  border:1px solid var(--rule-soft);
 }
 .rec h3{
-  font-family:var(--font-display);font-weight:800;font-size:1.25rem;
-  letter-spacing:-.02em;margin:0;
+  font-family:var(--font-display);font-weight:900;
+  font-size:1.625rem;letter-spacing:-.03em;margin:0;line-height:1;
 }
-.rec .lead{font-size:.9375rem;color:var(--accent);font-weight:500;margin:0;line-height:1.4}
-.rec .why{font-size:.9375rem;color:var(--ink-soft);margin:0;line-height:1.5}
+.rec .lead{
+  font-size:1rem;color:var(--accent);font-weight:500;
+  margin:0;line-height:1.4;
+}
+.rec .why{
+  font-size:.9375rem;color:var(--ink-soft);
+  margin:0;line-height:1.55;font-weight:300;
+}
 .rec .why strong{color:var(--ink);font-weight:600}
 .rec a.tool-link{
   display:inline-flex;align-items:center;gap:.375rem;
-  font-family:var(--font-mono);font-size:.75rem;font-weight:500;
-  color:var(--ink);letter-spacing:.04em;text-transform:uppercase;
-  padding-top:.625rem;border-top:1px solid var(--rule-soft);margin-top:.25rem;
+  font-family:var(--font-mono);font-size:11px;font-weight:600;
+  color:var(--ink);letter-spacing:.18em;text-transform:uppercase;
+  padding-top:.875rem;border-top:1px solid var(--rule-soft);margin-top:.25rem;
+  transition:color .25s var(--ease);
 }
 .rec a.tool-link:hover{color:var(--accent)}
+.rec a.tool-link::after{content:"↗";font-family:var(--font-mono);transition:transform .3s var(--ease)}
+.rec a.tool-link:hover::after{transform:translate(2px,-2px)}
 
 .cta-final{
   background:var(--card-bg);border:1px solid var(--card-border);
-  border-radius:var(--radius-lg);padding:1.5rem;
+  padding:2rem;
   display:grid;gap:1rem;text-align:center;
+  position:relative;
 }
-.cta-final h2{margin-bottom:.25rem}
+.cta-final h2{margin-bottom:.25rem;font-size:clamp(1.5rem,5vw,1.875rem)}
 
 .share-row{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-top:.5rem}
 .share-row button{
-  font-family:var(--font-mono);font-size:.6875rem;font-weight:500;
-  letter-spacing:.05em;text-transform:uppercase;
-  padding:.5rem .75rem;background:transparent;color:var(--ink-mute);
+  font-family:var(--font-mono);font-size:10.5px;font-weight:500;
+  letter-spacing:.18em;text-transform:uppercase;
+  padding:.6rem .9rem;background:transparent;color:var(--ink-mute);
   border:1px solid var(--rule);border-radius:999px;cursor:pointer;
-  transition:all .15s var(--ease);
+  transition:all .25s var(--ease);
 }
 .share-row button:hover{border-color:var(--ink);color:var(--ink)}
 
 @media (min-width:680px){
-  main{padding:2.5rem 0 7rem}
-  .intro-card{padding:2.5rem}
-  .rec{padding:1.5rem}
-  .nav{padding:1rem 1.25rem calc(1rem + env(safe-area-inset-bottom))}
+  main{padding:3rem 0 7rem}
+  .intro-card{padding:2.75rem}
+  .rec{padding:1.75rem}
+  .nav{padding:1rem 1.5rem calc(1rem + env(safe-area-inset-bottom))}
+  .result-hero{padding:2.5rem}
+  .cta-final{padding:2.5rem}
 }
 
 @media (prefers-reduced-motion:reduce){
@@ -308,9 +453,17 @@ h2{
 </head>
 <body>
 
+<div class="bg-mesh"></div>
+<div class="halftone"></div>
+<div class="noise-overlay"></div>
+
 <div class="bar-top">
   <div class="container">
-    <div class="brand"><span class="brand-mark">GL</span><span>Diagnóstico</span></div>
+    <div class="brand">
+      <span class="accent-bar" aria-hidden="true"></span>
+      <span class="brand-name">GL Suite</span>
+      <span class="brand-suffix">Diagnóstico</span>
+    </div>
     <span class="step-counter" id="stepCounter">Início</span>
   </div>
   <div class="progress" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
@@ -322,15 +475,15 @@ h2{
     <!-- INTRO -->
     <section class="screen active" id="screen-intro">
       <span class="eyebrow">Diagnóstico GL Suite</span>
-      <h1>Em 2 minutos, você sai daqui com o <em>plano certo</em>.</h1>
+      <h1>Em 2 minutos, você sai daqui com o <span class="accent">plano certo.</span></h1>
       <p class="lead">Responda 8 perguntas curtas sobre seu negócio e a gente devolve as 3 ferramentas da GL Suite que mais fazem diferença pro seu momento.</p>
       <div class="intro-card">
         <div class="intro-meta">
-          <div><strong>08</strong><span>perguntas</span></div>
-          <div><strong>2 min</strong><span>de duração</span></div>
-          <div><strong>03</strong><span>ferramentas</span></div>
+          <div class="intro-meta-cell"><strong>08</strong><span>Perguntas</span></div>
+          <div class="intro-meta-cell"><strong>2 min</strong><span>Duração</span></div>
+          <div class="intro-meta-cell"><strong>03</strong><span>Ferramentas</span></div>
         </div>
-        <button class="btn btn-primary btn-block" data-action="start">Começar diagnóstico <span class="arrow">→</span></button>
+        <button class="btn-primary btn-block" data-action="start">Começar diagnóstico <span class="btn-arrow" aria-hidden="true">→</span></button>
       </div>
       <p class="muted" style="text-align:center">Sem cadastro pra começar. Os dados ficam no nosso CRM, no seu controle.</p>
     </section>
@@ -341,10 +494,10 @@ h2{
     <!-- CAPTURE -->
     <section class="screen" id="screen-capture">
       <span class="eyebrow">Quase lá</span>
-      <h1>Pra entregar seu <em>diagnóstico</em>, só precisamos de:</h1>
+      <h1>Pra entregar seu <span class="accent">diagnóstico,</span> só precisamos de:</h1>
       <p class="lead">Resposta na hora aqui na tela. A gente envia uma cópia pro seu e-mail e fica disponível pra continuar a conversa pelo WhatsApp.</p>
 
-      <form id="captureForm" novalidate style="display:grid;gap:1rem">
+      <form id="captureForm" novalidate style="display:grid;gap:1.25rem">
         <div class="field">
           <label for="cap-nome">Nome</label>
           <input id="cap-nome" name="nome" type="text" required autocomplete="name" placeholder="Como podemos te chamar">
@@ -362,8 +515,9 @@ h2{
           <input id="cap-empresa" name="empresa" type="text" required autocomplete="organization" placeholder="Nome da sua empresa">
         </div>
         <div id="capStatus" class="form-status" role="status" aria-live="polite"></div>
-        <button type="submit" class="btn btn-primary btn-block" id="capSubmit">
-          <span class="btn-label">Ver meu diagnóstico →</span>
+        <button type="submit" class="btn-primary btn-block" id="capSubmit">
+          <span class="btn-label">Ver meu diagnóstico</span>
+          <span class="btn-arrow" aria-hidden="true">→</span>
         </button>
         <p class="consent">Ao enviar, você concorda em receber contato da GuessLess pelo WhatsApp e e-mail. Seus dados ficam no nosso CRM e nunca são compartilhados.</p>
       </form>
@@ -373,7 +527,7 @@ h2{
     <section class="screen" id="screen-result">
       <div class="result-hero">
         <span class="eyebrow">Seu diagnóstico</span>
-        <h2 id="result-title">Pronto, <em id="result-nome">tudo certo</em>.</h2>
+        <h2 id="result-title">Pronto, <span class="accent" id="result-nome">tudo certo</span>.</h2>
         <p id="result-summary">Com base nas suas respostas, sua empresa está na fase de <strong id="result-fase">—</strong>. As 3 ferramentas abaixo são as que mais movem o ponteiro pra você agora.</p>
         <div class="result-pills" id="result-pills"></div>
       </div>
@@ -381,10 +535,10 @@ h2{
       <div class="recs" id="recs"></div>
 
       <div class="cta-final">
-        <span class="eyebrow">Próximo passo</span>
+        <span class="eyebrow" style="justify-self:center">Próximo passo</span>
         <h2>Quer entrar no detalhe?</h2>
         <p class="muted">Em 30 minutos com um especialista da GuessLess, você sai com a ordem exata pra implementar.</p>
-        <a id="finalWa" href="#" class="btn btn-wa btn-block" target="_blank" rel="noopener">
+        <a id="finalWa" href="#" class="btn-primary btn-wa btn-block" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.52 3.48A11.94 11.94 0 0 0 12 0C5.37 0 0 5.37 0 12c0 2.11.55 4.17 1.6 5.99L0 24l6.17-1.62A11.94 11.94 0 0 0 12 24c6.63 0 12-5.37 12-12 0-3.2-1.25-6.21-3.48-8.52ZM12 22a9.93 9.93 0 0 1-5.07-1.39l-.36-.21-3.66.96.98-3.57-.24-.37A9.93 9.93 0 0 1 2 12C2 6.48 6.48 2 12 2s10 4.48 10 10-4.48 10-10 10Zm5.43-7.49c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.74-1.65-2.04-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51l-.57-.01c-.2 0-.52.07-.79.37-.27.3-1.03 1-1.03 2.45s1.06 2.85 1.21 3.05c.15.2 2.09 3.19 5.06 4.47.71.31 1.26.49 1.69.63.71.22 1.35.19 1.86.12.57-.08 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35Z"/></svg>
           Falar com especialista pelo WhatsApp
         </a>
@@ -400,8 +554,8 @@ h2{
 
 <nav class="nav" id="quizNav">
   <div class="container">
-    <button class="btn btn-ghost btn-icon" data-action="prev" aria-label="Voltar">←</button>
-    <button class="btn btn-primary" data-action="next" id="navNext" disabled>Próxima <span class="arrow">→</span></button>
+    <button class="btn-ghost btn-icon" data-action="prev" aria-label="Voltar">←</button>
+    <button class="btn-primary" data-action="next" id="navNext" disabled>Próxima <span class="btn-arrow" aria-hidden="true">→</span></button>
   </div>
 </nav>
 
@@ -416,55 +570,17 @@ h2{
     WHATSAPP_NUMBER:'5511910817825'
   };
 
-  // ===== DADOS DO CATÁLOGO =====
   const TOOLS = {
-    'lpmaker':{
-      nome:'LPMaker', tag:'Criação',
-      lead:'Landing pages que convertem.',
-      url:'https://wa.me/5511910817825?text=Tenho%20interesse%20na%20ferramenta%20LPMaker'
-    },
-    'brandmeup':{
-      nome:'BrandMeUp', tag:'Criação',
-      lead:'Identidade visual com IA.',
-      url:'https://criandomarcas.com.br'
-    },
-    'gomarketer':{
-      nome:'Go to Marketer', tag:'Criação',
-      lead:'Go-to-Market com dados.',
-      url:'https://gomarketer.com.br'
-    },
-    'gl-forms':{
-      nome:'GL Forms', tag:'Produtividade',
-      lead:'Formulários inteligentes.',
-      url:'https://forms.guessless.com.br'
-    },
-    'dora':{
-      nome:'Dora IA', tag:'Produtividade',
-      lead:'Atendimento WhatsApp 24/7.',
-      url:'https://wa.me/5511910817825?text=Tenho%20interesse%20na%20ferramenta%20Dora%20IA'
-    },
-    'atlas':{
-      nome:'Atlas', tag:'Produtividade',
-      lead:'Gestão interna com IA.',
-      url:'https://wa.me/5511910817825?text=Tenho%20interesse%20na%20ferramenta%20Atlas'
-    },
-    'seo-insights':{
-      nome:'SEO Insights', tag:'Performance',
-      lead:'Inteligência de SEO com IA.',
-      url:'https://seome.com.br'
-    },
-    'gl-data':{
-      nome:'GL Data', tag:'BI',
-      lead:'Métricas em tempo real.',
-      url:'https://wa.me/5511910817825?text=Tenho%20interesse%20na%20ferramenta%20GL%20Data'
-    }
+    'lpmaker':{nome:'LPMaker', tag:'Criação', lead:'Landing pages que convertem.', url:'https://wa.me/5511910817825?text=Tenho%20interesse%20na%20ferramenta%20LPMaker'},
+    'brandmeup':{nome:'BrandMeUp', tag:'Criação', lead:'Identidade visual com IA.', url:'https://criandomarcas.com.br'},
+    'gomarketer':{nome:'Go to Marketer', tag:'Criação', lead:'Go-to-Market com dados.', url:'https://gomarketer.com.br'},
+    'gl-forms':{nome:'GL Forms', tag:'Produtividade', lead:'Formulários inteligentes.', url:'https://forms.guessless.com.br'},
+    'dora':{nome:'Dora IA', tag:'Produtividade', lead:'Atendimento WhatsApp 24/7.', url:'https://wa.me/5511910817825?text=Tenho%20interesse%20na%20ferramenta%20Dora%20IA'},
+    'atlas':{nome:'Atlas', tag:'Produtividade', lead:'Gestão interna com IA.', url:'https://wa.me/5511910817825?text=Tenho%20interesse%20na%20ferramenta%20Atlas'},
+    'seo-insights':{nome:'SEO Insights', tag:'Performance', lead:'Inteligência de SEO com IA.', url:'https://seome.com.br'},
+    'gl-data':{nome:'GL Data', tag:'BI', lead:'Métricas em tempo real.', url:'https://wa.me/5511910817825?text=Tenho%20interesse%20na%20ferramenta%20GL%20Data'}
   };
 
-  // ===== PERGUNTAS =====
-  // type: 'single' | 'multi'
-  // weight multiplica os pontos da resposta
-  // Em multi, a resposta SELECIONADA confirma que a pessoa JÁ TEM aquilo.
-  // O peso negativo (none) marca o que ela NÃO tem → ferramenta resolve.
   const QUESTIONS = [
     {
       id:'q1', type:'single', weight:2,
@@ -486,22 +602,14 @@ h2{
       title:'Qual é a maior dor agora?',
       hint:'a que mais te incomoda',
       options:[
-        {label:'Marca/identidade visual sem força', sub:'branding fraco',
-          score:{brandmeup:3}},
-        {label:'Site ou LP que não converte', sub:'tráfego entra e não vira lead',
-          score:{lpmaker:3}},
-        {label:'Não sei lançar coisa nova com método', sub:'lançamento improvisado',
-          score:{gomarketer:3}},
-        {label:'Atendimento engasgado / lead esfria', sub:'WhatsApp travado',
-          score:{dora:3}},
-        {label:'Time desorganizado, sem gestão', sub:'tarefa perdida em DM',
-          score:{atlas:3}},
-        {label:'Captação de lead fraca', sub:'forms ruins, conversão baixa',
-          score:{'gl-forms':3, lpmaker:1}},
-        {label:'Apareço pouco no Google', sub:'orgânico inexistente',
-          score:{'seo-insights':3}},
-        {label:'Não sei o que está dando resultado', sub:'sem visibilidade de canal',
-          score:{'gl-data':3}}
+        {label:'Marca/identidade visual sem força', sub:'branding fraco', score:{brandmeup:3}},
+        {label:'Site ou LP que não converte', sub:'tráfego entra e não vira lead', score:{lpmaker:3}},
+        {label:'Não sei lançar coisa nova com método', sub:'lançamento improvisado', score:{gomarketer:3}},
+        {label:'Atendimento engasgado / lead esfria', sub:'WhatsApp travado', score:{dora:3}},
+        {label:'Time desorganizado, sem gestão', sub:'tarefa perdida em DM', score:{atlas:3}},
+        {label:'Captação de lead fraca', sub:'forms ruins, conversão baixa', score:{'gl-forms':3, lpmaker:1}},
+        {label:'Apareço pouco no Google', sub:'orgânico inexistente', score:{'seo-insights':3}},
+        {label:'Não sei o que está dando resultado', sub:'sem visibilidade de canal', score:{'gl-data':3}}
       ]
     },
     {
@@ -509,14 +617,10 @@ h2{
       title:'Quantas pessoas no seu time de marketing/vendas?',
       hint:'inclui você',
       options:[
-        {label:'Só eu', sub:'operação solo',
-          score:{}},
-        {label:'2 a 5 pessoas', sub:'time enxuto',
-          score:{atlas:1}},
-        {label:'6 a 15 pessoas', sub:'time médio',
-          score:{atlas:2, 'gl-data':1}},
-        {label:'16 ou mais', sub:'time grande',
-          score:{atlas:3, 'gl-data':2}}
+        {label:'Só eu', sub:'operação solo', score:{}},
+        {label:'2 a 5 pessoas', sub:'time enxuto', score:{atlas:1}},
+        {label:'6 a 15 pessoas', sub:'time médio', score:{atlas:2, 'gl-data':1}},
+        {label:'16 ou mais', sub:'time grande', score:{atlas:3, 'gl-data':2}}
       ]
     },
     {
@@ -524,21 +628,13 @@ h2{
       title:'O que sua empresa já tem hoje?',
       hint:'marque tudo que se aplica',
       explainer:'a falta indica onde a gente entra',
-      // Cada opção MARCADA = JÁ TEM (não pontua).
-      // Os IDs em "absent" pontuam quando NÃO marcado.
       options:[
-        {label:'Site ou LP que converte bem', sub:'taxa de conversão saudável',
-          score:{}, absent:{lpmaker:2}},
-        {label:'Identidade visual sólida', sub:'manual de marca, paleta, tom',
-          score:{}, absent:{brandmeup:2}},
-        {label:'Atendimento WhatsApp estruturado', sub:'fila, padrão, resposta',
-          score:{}, absent:{dora:2}},
-        {label:'Forms de captura inteligentes', sub:'lógica condicional, integração',
-          score:{}, absent:{'gl-forms':2}},
-        {label:'Dashboard de marketing/vendas', sub:'Meta, Google, GA, CRM num lugar',
-          score:{}, absent:{'gl-data':2}},
-        {label:'Gestão de tarefas centralizada', sub:'time alinhado em uma ferramenta',
-          score:{}, absent:{atlas:2}}
+        {label:'Site ou LP que converte bem', sub:'taxa de conversão saudável', score:{}, absent:{lpmaker:2}},
+        {label:'Identidade visual sólida', sub:'manual de marca, paleta, tom', score:{}, absent:{brandmeup:2}},
+        {label:'Atendimento WhatsApp estruturado', sub:'fila, padrão, resposta', score:{}, absent:{dora:2}},
+        {label:'Forms de captura inteligentes', sub:'lógica condicional, integração', score:{}, absent:{'gl-forms':2}},
+        {label:'Dashboard de marketing/vendas', sub:'Meta, Google, GA, CRM num lugar', score:{}, absent:{'gl-data':2}},
+        {label:'Gestão de tarefas centralizada', sub:'time alinhado em uma ferramenta', score:{}, absent:{atlas:2}}
       ]
     },
     {
@@ -546,12 +642,9 @@ h2{
       title:'Sua empresa investe em tráfego pago?',
       hint:'Meta, Google ou similares',
       options:[
-        {label:'Sim, regularmente', sub:'campanhas rodando',
-          score:{'gl-data':2, 'seo-insights':1}},
-        {label:'Esporadicamente', sub:'liga e desliga',
-          score:{'gl-data':1}},
-        {label:'Não', sub:'foco em orgânico',
-          score:{'seo-insights':1, gomarketer:1}}
+        {label:'Sim, regularmente', sub:'campanhas rodando', score:{'gl-data':2, 'seo-insights':1}},
+        {label:'Esporadicamente', sub:'liga e desliga', score:{'gl-data':1}},
+        {label:'Não', sub:'foco em orgânico', score:{'seo-insights':1, gomarketer:1}}
       ]
     },
     {
@@ -559,12 +652,9 @@ h2{
       title:'Como está sua presença orgânica (Google, blog, SEO)?',
       hint:'visibilidade onde o cliente decide',
       options:[
-        {label:'Forte, com ranking bom', sub:'já chego nas primeiras posições',
-          score:{}},
-        {label:'Fraca, sem estratégia clara', sub:'apareço pouco',
-          score:{'seo-insights':3}},
-        {label:'Inexistente, nunca trabalhamos', sub:'zero esforço de SEO',
-          score:{'seo-insights':3, gomarketer:1}}
+        {label:'Forte, com ranking bom', sub:'já chego nas primeiras posições', score:{}},
+        {label:'Fraca, sem estratégia clara', sub:'apareço pouco', score:{'seo-insights':3}},
+        {label:'Inexistente, nunca trabalhamos', sub:'zero esforço de SEO', score:{'seo-insights':3, gomarketer:1}}
       ]
     },
     {
@@ -572,12 +662,9 @@ h2{
       title:'Quando você lança um produto ou serviço novo, o processo é:',
       hint:'método ou improviso',
       options:[
-        {label:'Tem playbook claro', sub:'cada lançamento segue o mesmo método',
-          score:{}},
-        {label:'Improvisamos no caminho', sub:'cada vez é uma vez',
-          score:{gomarketer:3}},
-        {label:'Quase não lançamos coisas novas', sub:'travados na operação',
-          score:{gomarketer:2, brandmeup:1}}
+        {label:'Tem playbook claro', sub:'cada lançamento segue o mesmo método', score:{}},
+        {label:'Improvisamos no caminho', sub:'cada vez é uma vez', score:{gomarketer:3}},
+        {label:'Quase não lançamos coisas novas', sub:'travados na operação', score:{gomarketer:2, brandmeup:1}}
       ]
     },
     {
@@ -585,12 +672,9 @@ h2{
       title:'Quanto tempo leva pra colocar uma landing page nova no ar?',
       hint:'da decisão até o link funcionando',
       options:[
-        {label:'Em horas, sem dev', sub:'autonomia total',
-          score:{}},
-        {label:'Em dias, com ajuda de dev', sub:'depende do time técnico',
-          score:{lpmaker:2}},
-        {label:'Em semanas — ou nunca', sub:'travamos em dependência',
-          score:{lpmaker:3, 'gl-forms':1}}
+        {label:'Em horas, sem dev', sub:'autonomia total', score:{}},
+        {label:'Em dias, com ajuda de dev', sub:'depende do time técnico', score:{lpmaker:2}},
+        {label:'Em semanas — ou nunca', sub:'travamos em dependência', score:{lpmaker:3, 'gl-forms':1}}
       ]
     }
   ];
@@ -602,17 +686,11 @@ h2{
     bi:{nome:'Análise / BI', desc:'Você quer decidir com base em dado, não intuição.'}
   };
 
-  // ===== ESTADO =====
   const state = {
-    screen:'intro',           // intro | question | capture | result
-    qIndex:0,                 // índice da pergunta atual
-    answers:{},               // {q1: idxOrIdxArray}
-    fase:null,
-    scores:{},
-    lead:null
+    screen:'intro', qIndex:0, answers:{},
+    fase:null, scores:{}, lead:null
   };
 
-  // ===== HELPERS =====
   const $ = sel => document.querySelector(sel);
   const $$ = sel => document.querySelectorAll(sel);
 
@@ -653,9 +731,8 @@ h2{
       const valid = q.type === 'single' ? (ans !== undefined && ans !== null)
                                         : (Array.isArray(ans));
       $('#navNext').disabled = !valid;
-      $('#navNext').querySelector('.btn-label')?.remove();
       const isLast = state.qIndex === QUESTIONS.length - 1;
-      $('#navNext').innerHTML = (isLast ? 'Continuar' : 'Próxima') + ' <span class="arrow">→</span>';
+      $('#navNext').innerHTML = (isLast ? 'Continuar' : 'Próxima') + ' <span class="btn-arrow" aria-hidden="true">→</span>';
     } else {
       nav.classList.remove('show');
     }
@@ -695,7 +772,6 @@ h2{
         const i = parseInt(btn.dataset.i, 10);
         if(q.type === 'single'){
           state.answers[q.id] = i;
-          // Avança automático em escolha única (UX rápida pra estande)
           setTimeout(()=> {
             if(state.qIndex < QUESTIONS.length - 1){ state.qIndex++; renderQuestion(); updateBars(); updateNav(); }
             else { showScreen('capture'); }
@@ -705,7 +781,7 @@ h2{
           const idx = arr.indexOf(i);
           if(idx >= 0) arr.splice(idx,1); else arr.push(i);
           state.answers[q.id] = arr;
-          renderQuestion(); // re-render pra atualizar marcação
+          renderQuestion();
         }
         updateNav();
       });
@@ -724,23 +800,19 @@ h2{
       if(q.type === 'single'){
         const opt = q.options[ans];
         if(!opt) return;
-        // Pontuação direta
         Object.entries(opt.score || {}).forEach(([t, v]) => {
           scores[t] = (scores[t] || 0) + v * q.weight;
         });
-        // Tag de fase
         if(opt.tag){
           const s = q.weight;
           if(s > faseScore){ faseScore = s; faseTag = opt.tag; }
         }
       } else {
-        // multi
         const sel = Array.isArray(ans) ? ans : [];
         q.options.forEach((opt, i) => {
           if(sel.includes(i)){
             Object.entries(opt.score || {}).forEach(([t, v]) => { scores[t] = (scores[t]||0) + v * q.weight; });
           } else {
-            // Não tem → pontua absent
             Object.entries(opt.absent || {}).forEach(([t, v]) => { scores[t] = (scores[t]||0) + v * q.weight; });
           }
         });
@@ -751,7 +823,6 @@ h2{
   }
 
   function buildWhy(toolId, top, fase){
-    // Frase justificadora baseada na fase + dor declarada
     const dorIdx = state.answers.q2;
     const dorOpt = dorIdx !== undefined ? QUESTIONS[1].options[dorIdx] : null;
     const dorMap = {
@@ -790,7 +861,6 @@ h2{
 
     const top = ranked.map(([id]) => id);
 
-    // Hero
     if(state.lead?.nome){
       $('#result-nome').textContent = state.lead.nome.split(' ')[0];
     }
@@ -798,7 +868,6 @@ h2{
     const pillsHtml = top.map((id, i) => `<span class="result-pill">#${i+1} ${TOOLS[id].nome}</span>`).join('');
     $('#result-pills').innerHTML = pillsHtml;
 
-    // Recs
     let recsHtml = '';
     top.forEach((id, i) => {
       const t = TOOLS[id];
@@ -811,12 +880,11 @@ h2{
           <h3>${t.nome}</h3>
           <p class="lead">${t.lead}</p>
           <p class="why">${buildWhy(id, top, fase)}</p>
-          <a class="tool-link" href="${t.url}" target="_blank" rel="noopener">Conhecer ${t.nome} →</a>
+          <a class="tool-link" href="${t.url}" target="_blank" rel="noopener">Conhecer ${t.nome}</a>
         </article>`;
     });
     $('#recs').innerHTML = recsHtml;
 
-    // WhatsApp final personalizado
     const topNames = top.map(id => TOOLS[id].nome).join(', ');
     const waText = encodeURIComponent(
       `Olá! Acabei de fazer o diagnóstico no estande do SPIW` +
@@ -826,7 +894,6 @@ h2{
     $('#finalWa').href = `https://wa.me/${CONFIG.WHATSAPP_NUMBER}?text=${waText}`;
   }
 
-  // ===== FORM CAPTURE =====
   function maskPhone(v){
     v = v.replace(/\D/g,'').slice(0,11);
     if(v.length <= 10) return v.replace(/(\d{2})(\d{4})(\d{0,4}).*/, '($1) $2-$3').replace(/-$/,'');
@@ -887,7 +954,6 @@ h2{
     submit.querySelector('.btn-label').textContent = 'Calculando…';
     status.className = 'form-status loading'; status.textContent = 'Processando…';
 
-    // Calcula antes de enviar pra mandar com payload completo
     const {scores, fase} = calcScores();
     const top = Object.entries(scores).sort((a,b)=>b[1]-a[1]).filter(([,v])=>v>0).slice(0,3).map(([id])=>id);
     const dorIdx = state.answers.q2;
@@ -903,33 +969,25 @@ h2{
     renderResult();
   });
 
-  // ===== AÇÕES GLOBAIS =====
   document.addEventListener('click', function(e){
     const btn = e.target.closest('[data-action]');
     if(!btn) return;
     const action = btn.dataset.action;
 
-    if(action === 'start'){
-      state.qIndex = 0;
-      showScreen('question');
-    }
+    if(action === 'start'){ state.qIndex = 0; showScreen('question'); }
     if(action === 'next'){
       if(state.qIndex < QUESTIONS.length - 1){
         state.qIndex++;
         renderQuestion(); updateBars(); updateNav();
         window.scrollTo({top:0,behavior:'smooth'});
-      } else {
-        showScreen('capture');
-      }
+      } else { showScreen('capture'); }
     }
     if(action === 'prev'){
       if(state.qIndex > 0){
         state.qIndex--;
         renderQuestion(); updateBars(); updateNav();
         window.scrollTo({top:0,behavior:'smooth'});
-      } else {
-        showScreen('intro');
-      }
+      } else { showScreen('intro'); }
     }
     if(action === 'restart'){
       state.qIndex = 0; state.answers = {}; state.lead = null; state.scores = {}; state.fase = null;
@@ -943,7 +1001,6 @@ h2{
     }
   });
 
-  // Bootstrap
   showScreen('intro');
 })();
 </script>
