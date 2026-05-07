@@ -1,0 +1,674 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ef">
+<title>GL Suite — A ferramenta certa pro momento da sua empresa</title>
+<meta name="description" content="8 produtos de CRO da GuessLess para captar, converter e reter melhor. Agende 30 minutos com um especialista e saia com um plano claro.">
+<meta property="og:title" content="GL Suite — A ferramenta certa pro momento da sua empresa">
+<meta property="og:description" content="Agende uma call com um especialista da GuessLess e descubra qual ferramenta da GL Suite cabe na sua operação.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<link rel="icon" href="https://glsuite.com.br/favicon.ico" type="image/x-icon">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Montserrat:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f4ef;
+  --bg-elev:#fff;
+  --bg-deep:#ecebe5;
+  --ink:#0a0a0f;
+  --ink-soft:#2a2a33;
+  --ink-mute:#6b6b75;
+  --ink-faint:#a8a8b0;
+  --rule:rgba(10,10,15,.12);
+  --rule-soft:rgba(10,10,15,.06);
+  --accent:#0014ff;
+  --accent-bright:#2040ff;
+  --accent-wash:rgba(0,20,255,.06);
+  --accent-dim:rgba(0,20,255,.18);
+  --card-bg:#fff;
+  --card-border:rgba(10,10,15,.08);
+  --radius:.5rem;
+  --radius-lg:1rem;
+  --max:56rem;
+  --ease:cubic-bezier(.4,0,.2,1);
+  --font-display:"Montserrat","Montserrat Fallback",system-ui,sans-serif;
+  --font-body:"DM Sans","DM Sans Fallback",system-ui,sans-serif;
+  --font-mono:"JetBrains Mono","JetBrains Mono Fallback",ui-monospace,monospace;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--font-body);
+  font-size:1rem;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  font-feature-settings:"ss01","cv11";
+}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+button,input,select,textarea{font:inherit;color:inherit}
+::selection{background:var(--accent);color:#fff}
+
+.container{width:100%;max-width:var(--max);margin:0 auto;padding:0 1.25rem}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:.5rem;
+  font-family:var(--font-mono);font-size:.75rem;font-weight:500;
+  letter-spacing:.05em;text-transform:uppercase;
+  color:var(--ink-mute);
+}
+.eyebrow::before{content:"—";color:var(--ink-faint)}
+
+/* HEADER */
+.site-header{
+  position:sticky;top:0;z-index:50;
+  background:rgba(245,244,239,.85);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--rule-soft);
+}
+.site-header .container{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-top:.875rem;padding-bottom:.875rem;
+}
+.brand{
+  display:flex;align-items:center;gap:.5rem;
+  font-family:var(--font-display);font-weight:800;font-size:1.0625rem;
+  letter-spacing:-.015em;
+}
+.brand-mark{
+  width:1.5rem;height:1.5rem;border-radius:.375rem;
+  background:var(--ink);color:#fff;
+  display:grid;place-items:center;
+  font-family:var(--font-mono);font-size:.8125rem;font-weight:700;
+}
+.header-cta{
+  font-family:var(--font-mono);font-size:.75rem;font-weight:500;
+  letter-spacing:.05em;text-transform:uppercase;
+  color:var(--ink);padding:.5rem .875rem;
+  border:1px solid var(--ink);border-radius:999px;
+  transition:background .15s var(--ease),color .15s var(--ease);
+}
+.header-cta:hover,.header-cta:focus-visible{background:var(--ink);color:#fff}
+
+/* HERO */
+.hero{padding:3rem 0 2.5rem;border-bottom:1px solid var(--rule-soft)}
+.hero-grid{display:grid;gap:1.75rem}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.375rem .75rem;border-radius:999px;
+  background:var(--accent-wash);color:var(--accent);
+  font-family:var(--font-mono);font-size:.6875rem;font-weight:500;
+  letter-spacing:.08em;text-transform:uppercase;
+  width:max-content;
+}
+.hero-badge .dot{
+  width:.4375rem;height:.4375rem;border-radius:50%;
+  background:var(--accent);box-shadow:0 0 0 4px var(--accent-dim);
+  animation:pulse 2s var(--ease) infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.hero h1{
+  font-family:var(--font-display);font-weight:900;
+  font-size:clamp(2.25rem,8vw,4rem);
+  line-height:1;letter-spacing:-.035em;
+  margin:0;color:var(--ink);
+}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero-sub{
+  font-size:1.0625rem;line-height:1.55;
+  color:var(--ink-soft);max-width:34rem;
+  margin:0;
+}
+.hero-meta{
+  display:flex;flex-wrap:wrap;gap:1rem 1.5rem;
+  font-family:var(--font-mono);font-size:.75rem;
+  color:var(--ink-mute);letter-spacing:.03em;
+}
+.hero-meta span{display:inline-flex;align-items:center;gap:.5rem}
+.hero-meta .num{color:var(--ink);font-weight:500}
+.hero-actions{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+  font-family:var(--font-body);font-weight:600;font-size:.9375rem;
+  padding:.875rem 1.25rem;border-radius:var(--radius);
+  border:1px solid transparent;cursor:pointer;
+  transition:transform .15s var(--ease),background .15s var(--ease),color .15s var(--ease),border-color .15s var(--ease);
+  text-align:center;line-height:1.2;
+}
+.btn-primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+.btn-primary:hover,.btn-primary:focus-visible{background:var(--accent);border-color:var(--accent)}
+.btn-ghost{background:transparent;color:var(--ink);border-color:var(--rule)}
+.btn-ghost:hover,.btn-ghost:focus-visible{border-color:var(--ink);background:var(--bg-deep)}
+.btn-block{width:100%}
+.btn .arrow{transition:transform .15s var(--ease)}
+.btn:hover .arrow{transform:translateX(2px)}
+
+/* MARQUEE / SOCIAL PROOF */
+.bar{
+  background:var(--ink);color:#fff;
+  padding:.875rem 0;overflow:hidden;
+}
+.bar-track{
+  display:flex;gap:3rem;white-space:nowrap;
+  font-family:var(--font-mono);font-size:.75rem;
+  letter-spacing:.1em;text-transform:uppercase;
+  animation:scroll 30s linear infinite;
+}
+.bar-track span{display:inline-flex;align-items:center;gap:.5rem;opacity:.85}
+.bar-track span::before{content:"●";color:var(--accent-bright);font-size:.5rem}
+@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* SECTIONS */
+section{padding:3rem 0;border-bottom:1px solid var(--rule-soft)}
+.section-head{display:grid;gap:.75rem;margin-bottom:2rem}
+.section-head h2{
+  font-family:var(--font-display);font-weight:800;
+  font-size:clamp(1.625rem,5vw,2.25rem);
+  line-height:1.05;letter-spacing:-.03em;margin:0;
+}
+.section-head p{
+  color:var(--ink-soft);font-size:1rem;line-height:1.55;
+  max-width:36rem;margin:0;
+}
+
+/* PILLARS */
+.pillars{display:grid;gap:.75rem}
+.pillar{
+  background:var(--card-bg);border:1px solid var(--card-border);
+  border-radius:var(--radius-lg);padding:1.25rem;
+  display:grid;gap:.5rem;position:relative;overflow:hidden;
+}
+.pillar-num{
+  font-family:var(--font-mono);font-size:.75rem;font-weight:500;
+  color:var(--accent);letter-spacing:.05em;
+}
+.pillar h3{
+  font-family:var(--font-display);font-weight:800;
+  font-size:1.125rem;letter-spacing:-.015em;margin:0;
+}
+.pillar p{font-size:.9375rem;color:var(--ink-soft);margin:0;line-height:1.5}
+.pillar-tools{
+  font-family:var(--font-mono);font-size:.6875rem;
+  color:var(--ink-mute);letter-spacing:.04em;
+  padding-top:.5rem;border-top:1px solid var(--rule-soft);margin-top:.25rem;
+}
+
+/* TOOLS GRID */
+.tools{display:grid;gap:.75rem}
+.tool{
+  background:var(--card-bg);border:1px solid var(--card-border);
+  border-radius:var(--radius-lg);padding:1.25rem;
+  display:grid;gap:.625rem;
+  transition:border-color .15s var(--ease),transform .15s var(--ease);
+}
+.tool:hover{border-color:var(--ink);transform:translateY(-1px)}
+.tool-head{display:flex;align-items:center;justify-content:space-between;gap:.75rem}
+.tool-num{
+  font-family:var(--font-mono);font-size:.6875rem;font-weight:500;
+  color:var(--ink-faint);letter-spacing:.05em;
+}
+.tool-tag{
+  font-family:var(--font-mono);font-size:.6875rem;font-weight:500;
+  color:var(--accent);background:var(--accent-wash);
+  padding:.25rem .5rem;border-radius:.25rem;
+  letter-spacing:.04em;text-transform:uppercase;
+}
+.tool h3{
+  font-family:var(--font-display);font-weight:800;font-size:1.25rem;
+  letter-spacing:-.02em;margin:0;
+}
+.tool .lead{
+  font-size:.9375rem;color:var(--accent);font-weight:500;
+  margin:0;line-height:1.4;
+}
+.tool .desc{font-size:.9375rem;color:var(--ink-soft);margin:0;line-height:1.5}
+.tool .for{
+  font-family:var(--font-mono);font-size:.6875rem;
+  color:var(--ink-mute);letter-spacing:.03em;
+  padding-top:.5rem;border-top:1px solid var(--rule-soft);
+}
+
+/* CTA BLOCK */
+.cta-block{
+  background:var(--ink);color:#fff;
+  border-radius:var(--radius-lg);padding:2rem 1.5rem;
+  display:grid;gap:1.25rem;text-align:center;
+}
+.cta-block h2{
+  font-family:var(--font-display);font-weight:900;
+  font-size:clamp(1.5rem,5vw,2rem);
+  line-height:1.05;letter-spacing:-.03em;margin:0;
+}
+.cta-block p{color:rgba(255,255,255,.75);max-width:30rem;margin:0 auto;font-size:1rem}
+.cta-block .btn-primary{background:var(--accent);border-color:var(--accent)}
+.cta-block .btn-primary:hover{background:#fff;color:var(--ink);border-color:#fff}
+
+/* FORM */
+.form-section{background:var(--bg-deep)}
+.form-card{
+  background:var(--card-bg);border:1px solid var(--card-border);
+  border-radius:var(--radius-lg);padding:1.5rem;
+  display:grid;gap:1rem;
+}
+.form-card h2{
+  font-family:var(--font-display);font-weight:900;
+  font-size:clamp(1.5rem,5vw,2rem);
+  line-height:1.05;letter-spacing:-.03em;margin:0;
+}
+.form-card .sub{color:var(--ink-soft);margin:0 0 .5rem;font-size:.9375rem}
+.field{display:grid;gap:.375rem}
+.field label{
+  font-family:var(--font-mono);font-size:.6875rem;font-weight:500;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--ink-mute);
+}
+.field input,.field select{
+  width:100%;padding:.75rem .875rem;
+  background:var(--bg);border:1px solid var(--rule);
+  border-radius:var(--radius);font-size:.9375rem;
+  transition:border-color .15s var(--ease),background .15s var(--ease);
+}
+.field input:focus,.field select:focus{
+  outline:none;border-color:var(--ink);background:#fff;
+}
+.field-row{display:grid;gap:1rem}
+.consent{
+  font-family:var(--font-body);font-size:.75rem;
+  color:var(--ink-mute);line-height:1.5;
+}
+.form-status{
+  font-size:.875rem;padding:.75rem;border-radius:var(--radius);
+  display:none;
+}
+.form-status.error{
+  display:block;background:rgba(220,38,38,.08);
+  color:#dc2626;border:1px solid rgba(220,38,38,.2);
+}
+.form-status.loading{display:block;background:var(--accent-wash);color:var(--accent)}
+
+/* FOOTER */
+.site-footer{padding:2rem 0 3rem;color:var(--ink-mute)}
+.site-footer .container{display:grid;gap:1rem}
+.site-footer .row{display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center}
+.site-footer a{color:var(--ink-soft);font-size:.875rem}
+.site-footer a:hover{color:var(--accent)}
+.site-footer .small{font-family:var(--font-mono);font-size:.6875rem;letter-spacing:.05em;text-transform:uppercase}
+
+/* DESKTOP */
+@media (min-width:680px){
+  .container{padding:0 2rem}
+  .hero{padding:5rem 0 4rem}
+  section{padding:5rem 0}
+  .hero-grid{gap:2.25rem}
+  .pillars{grid-template-columns:repeat(2,1fr);gap:1rem}
+  .tools{grid-template-columns:repeat(2,1fr);gap:1rem}
+  .form-card{padding:2.5rem}
+  .field-row{grid-template-columns:1fr 1fr}
+  .cta-block{padding:3rem 2.5rem}
+}
+@media (min-width:980px){
+  .pillars{grid-template-columns:repeat(4,1fr)}
+  .tools{grid-template-columns:repeat(4,1fr)}
+}
+
+/* MOTION */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="#" class="brand" aria-label="GL Suite">
+      <span class="brand-mark">GL</span>
+      <span>Suite</span>
+    </a>
+    <a href="#agendar" class="header-cta">Agendar call</a>
+  </div>
+</header>
+
+<main>
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="container">
+    <div class="hero-grid">
+      <span class="hero-badge"><span class="dot"></span> GuessLess no SPIW</span>
+      <h1 id="hero-title">A ferramenta <em>certa</em> pro momento da sua empresa.</h1>
+      <p class="hero-sub">8 produtos de CRO conectados — site, marca, atendimento, dados. Agende 30 minutos com um especialista da GuessLess e saia com um plano claro de qual ferramenta destrava seu próximo nível.</p>
+      <div class="hero-meta" aria-label="Resumo">
+        <span><span class="num">08</span> ferramentas à venda</span>
+        <span><span class="num">04</span> frentes de operação</span>
+        <span><span class="num">30</span> min com especialista</span>
+      </div>
+      <div class="hero-actions">
+        <a href="#agendar" class="btn btn-primary">Agendar call com especialista <span class="arrow">→</span></a>
+        <a href="#ferramentas" class="btn btn-ghost">Ver o catálogo</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="bar" aria-hidden="true">
+  <div class="bar-track">
+    <span>Captação</span><span>Conversão</span><span>Retenção</span><span>Atendimento</span><span>Tráfego pago</span><span>SEO</span><span>BI</span><span>Branding</span><span>Captação</span><span>Conversão</span><span>Retenção</span><span>Atendimento</span><span>Tráfego pago</span><span>SEO</span><span>BI</span><span>Branding</span>
+  </div>
+</div>
+
+<section id="frentes" aria-labelledby="frentes-title">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">04 frentes</span>
+      <h2 id="frentes-title">Cada momento de empresa pede uma ferramenta diferente.</h2>
+      <p>A GL Suite é modular: você contrata só o que faz sentido pra fase em que sua operação está agora. Sem bundle obrigatório, sem peça que você não vai usar.</p>
+    </div>
+    <div class="pillars">
+      <article class="pillar">
+        <span class="pillar-num">— 01</span>
+        <h3>Criação</h3>
+        <p>Sua empresa está nascendo, trocando posicionamento ou lançando algo novo.</p>
+        <p class="pillar-tools">LPMaker · BrandMeUp · Go to Marketer</p>
+      </article>
+      <article class="pillar">
+        <span class="pillar-num">— 02</span>
+        <h3>Produtividade</h3>
+        <p>A operação roda, mas é caótica. Falta padrão, dado e atendimento que escala.</p>
+        <p class="pillar-tools">GL Forms · Dora IA · Atlas</p>
+      </article>
+      <article class="pillar">
+        <span class="pillar-num">— 03</span>
+        <h3>Performance</h3>
+        <p>Empresa madura querendo ganhar concorrência: tráfego, SEO e atendimento afinados.</p>
+        <p class="pillar-tools">Dora IA · GL Data · SEO Insights · LPMaker</p>
+      </article>
+      <article class="pillar">
+        <span class="pillar-num">— 04</span>
+        <h3>Análise / BI</h3>
+        <p>Decisão baseada em dado, não intuição. Atribuição real de canal e relatórios automáticos.</p>
+        <p class="pillar-tools">GL Data · SEO Insights</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="ferramentas" aria-labelledby="ferramentas-title">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">08 ferramentas à venda</span>
+      <h2 id="ferramentas-title">Catálogo da GL Suite.</h2>
+      <p>Cada ferramenta resolve uma dor específica de captação, conversão ou retenção. Você decide quais entram na sua operação — o especialista te ajuda a montar a combinação.</p>
+    </div>
+    <div class="tools">
+
+      <article class="tool">
+        <div class="tool-head"><span class="tool-num">— 01</span><span class="tool-tag">Criação</span></div>
+        <h3>LPMaker</h3>
+        <p class="lead">Landing pages que convertem.</p>
+        <p class="desc">Páginas otimizadas para conversão sem depender de dev. Publicação rápida, A/B nativo e integração direta com seus formulários e CRM.</p>
+        <p class="for">Marketing · Founders · Lançamentos</p>
+      </article>
+
+      <article class="tool">
+        <div class="tool-head"><span class="tool-num">— 02</span><span class="tool-tag">Criação</span></div>
+        <h3>BrandMeUp</h3>
+        <p class="lead">Identidade visual com IA.</p>
+        <p class="desc">Construção completa de marca: arquétipo, tom de voz, manifesto e paleta. Diferenciação real, não logo genérico.</p>
+        <p class="for">Empresas em rebrand · Novos negócios · Equipes de marca</p>
+      </article>
+
+      <article class="tool">
+        <div class="tool-head"><span class="tool-num">— 03</span><span class="tool-tag">Criação</span></div>
+        <h3>Go to Marketer</h3>
+        <p class="lead">Go-to-Market com dados.</p>
+        <p class="desc">Planejamento de lançamento de ponta a ponta — posicionamento, persona, canais, funil e cronograma — pra você não improvisar quando colocar algo novo no ar.</p>
+        <p class="for">Diretores de marketing · Founders · Heads de produto</p>
+      </article>
+
+      <article class="tool">
+        <div class="tool-head"><span class="tool-num">— 04</span><span class="tool-tag">Produtividade</span></div>
+        <h3>GL Forms</h3>
+        <p class="lead">Formulários inteligentes.</p>
+        <p class="desc">Captura com lógica condicional, integração nativa com CRM e Dora IA. Pra parar de perder lead na primeira porta.</p>
+        <p class="for">Marketing · Comercial · Atendimento</p>
+      </article>
+
+      <article class="tool">
+        <div class="tool-head"><span class="tool-num">— 05</span><span class="tool-tag">Produtividade</span></div>
+        <h3>Dora IA</h3>
+        <p class="lead">Atendimento inteligente 24/7.</p>
+        <p class="desc">IA de WhatsApp com agentes de suporte, pós-venda e qualificação. Lead não esfria mais por causa de horário ou volume.</p>
+        <p class="for">Comercial · SAC · Operações com WhatsApp</p>
+      </article>
+
+      <article class="tool">
+        <div class="tool-head"><span class="tool-num">— 06</span><span class="tool-tag">Produtividade</span></div>
+        <h3>Atlas</h3>
+        <p class="lead">Gestão interna com IA.</p>
+        <p class="desc">Tasks, reuniões, lembretes e status do time num lugar só. Pra parar de perder coisa em DM e planilha.</p>
+        <p class="for">Líderes de time · PMs · Heads de operação</p>
+      </article>
+
+      <article class="tool">
+        <div class="tool-head"><span class="tool-num">— 07</span><span class="tool-tag">Performance</span></div>
+        <h3>SEO Insights</h3>
+        <p class="lead">Inteligência de SEO com IA.</p>
+        <p class="desc">Auditoria contínua, monitoramento de palavra-chave e detecção de erros técnicos. Pra você aparecer onde o cliente decide.</p>
+        <p class="for">Marketing · SEO in-house · Agências</p>
+      </article>
+
+      <article class="tool">
+        <div class="tool-head"><span class="tool-num">— 08</span><span class="tool-tag">BI</span></div>
+        <h3>GL Data</h3>
+        <p class="lead">Métricas em tempo real.</p>
+        <p class="desc">Dashboards que conectam Meta Ads, Google Ads, GA4 e CRM. Relatório automático no e-mail ou WhatsApp — fim das planilhas mensais.</p>
+        <p class="for">Diretoria · Marketing · BI</p>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="cta-title">
+  <div class="container">
+    <div class="cta-block">
+      <h2 id="cta-title">Não saia do SPIW sem um plano.</h2>
+      <p>Em 30 minutos com um especialista, a gente mapeia em qual frente você está, quais ferramentas fazem diferença agora e em que ordem entrar.</p>
+      <div><a href="#agendar" class="btn btn-primary">Quero agendar minha call <span class="arrow">→</span></a></div>
+    </div>
+  </div>
+</section>
+
+<section id="agendar" class="form-section" aria-labelledby="form-title">
+  <div class="container">
+    <div class="form-card">
+      <span class="eyebrow">Agendamento</span>
+      <h2 id="form-title">Conte rapidinho sobre seu negócio.</h2>
+      <p class="sub">A gente te chama no WhatsApp pra agendar a call de 30 minutos com um especialista da GuessLess.</p>
+
+      <form id="leadForm" novalidate>
+        <input type="hidden" name="identificador" value="lp-spiw-catalogo">
+        <input type="hidden" name="tags" value="SPIW">
+
+        <div class="field-row">
+          <div class="field">
+            <label for="nome">Nome</label>
+            <input id="nome" name="nome" type="text" required autocomplete="name" placeholder="Como podemos te chamar">
+          </div>
+          <div class="field">
+            <label for="email">E-mail corporativo</label>
+            <input id="email" name="email" type="email" required autocomplete="email" placeholder="voce@empresa.com.br">
+          </div>
+        </div>
+
+        <div class="field-row" style="margin-top:1rem">
+          <div class="field">
+            <label for="telefone">WhatsApp</label>
+            <input id="telefone" name="telefone" type="tel" required autocomplete="tel" placeholder="(11) 99999-9999" inputmode="tel">
+          </div>
+          <div class="field">
+            <label for="empresa">Empresa</label>
+            <input id="empresa" name="empresa" type="text" required autocomplete="organization" placeholder="Nome da sua empresa">
+          </div>
+        </div>
+
+        <div class="field" style="margin-top:1rem">
+          <label for="momento">Em qual momento sua empresa está?</label>
+          <select id="momento" name="momento" required>
+            <option value="">Selecione</option>
+            <option value="criacao">Estamos começando ou trocando posicionamento</option>
+            <option value="produtividade">Operação rodando, mas caótica</option>
+            <option value="performance">Empresa madura querendo crescer</option>
+            <option value="bi">Quero decidir com base em dado</option>
+            <option value="indeciso">Não sei dizer ainda</option>
+          </select>
+        </div>
+
+        <div id="formStatus" class="form-status" role="status" aria-live="polite"></div>
+
+        <button type="submit" class="btn btn-primary btn-block" style="margin-top:.5rem" id="submitBtn">
+          <span class="btn-label">Agendar minha call →</span>
+        </button>
+
+        <p class="consent">Ao enviar, você concorda em receber contato da GuessLess pelo WhatsApp e e-mail. Seus dados ficam no nosso CRM e nunca são compartilhados.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="row">
+      <div class="brand">
+        <span class="brand-mark">GL</span>
+        <span>Suite</span>
+      </div>
+      <div class="row" style="gap:1.5rem">
+        <a href="https://glsuite.com.br" target="_blank" rel="noopener">Site oficial</a>
+        <a href="https://guessless.com.br" target="_blank" rel="noopener">GuessLess</a>
+        <a href="https://wa.me/5511910817825" target="_blank" rel="noopener">WhatsApp</a>
+      </div>
+    </div>
+    <div class="row">
+      <span class="small">© 2026 GuessLess · GL Suite</span>
+      <span class="small">Construída pela GuessLess</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // ===== CONFIGURAÇÃO RD STATION =====
+  // Substitua estes valores antes do deploy.
+  const CONFIG = {
+    RD_TOKEN: 'COLOQUE_AQUI_O_TOKEN_PUBLICO_RD',
+    RD_IDENTIFICADOR: 'lp-spiw-catalogo',
+    RD_TAGS: ['SPIW','catalogo','agendamento'],
+    REDIRECT_URL: 'obrigado.html',
+    // Opcional: webhook secundário pra disparar e-mail/WhatsApp paralelo
+    WEBHOOK_URL: ''
+  };
+
+  const form = document.getElementById('leadForm');
+  const status = document.getElementById('formStatus');
+  const submitBtn = document.getElementById('submitBtn');
+
+  function show(msg, type){
+    status.className = 'form-status ' + type;
+    status.textContent = msg;
+  }
+  function hide(){ status.className = 'form-status'; status.textContent=''; }
+
+  function maskPhone(v){
+    v = v.replace(/\D/g,'').slice(0,11);
+    if(v.length <= 10) return v.replace(/(\d{2})(\d{4})(\d{0,4}).*/, '($1) $2-$3').replace(/-$/,'');
+    return v.replace(/(\d{2})(\d{5})(\d{0,4}).*/, '($1) $2-$3').replace(/-$/,'');
+  }
+  document.getElementById('telefone').addEventListener('input', function(e){
+    e.target.value = maskPhone(e.target.value);
+  });
+
+  async function sendToRD(payload){
+    const body = new URLSearchParams();
+    body.append('token_rdstation', CONFIG.RD_TOKEN);
+    body.append('identificador', CONFIG.RD_IDENTIFICADOR);
+    body.append('tags', CONFIG.RD_TAGS.join(','));
+    body.append('email', payload.email);
+    body.append('nome', payload.nome);
+    body.append('telefone', payload.telefone);
+    body.append('empresa', payload.empresa);
+    body.append('cf_momento_empresa', payload.momento);
+    body.append('cf_origem', 'SPIW-LP-Catalogo');
+
+    return fetch('https://www.rdstation.com.br/api/1.3/conversions',{
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body: body.toString()
+    });
+  }
+
+  async function sendToWebhook(payload){
+    if(!CONFIG.WEBHOOK_URL) return;
+    return fetch(CONFIG.WEBHOOK_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(Object.assign({source:'lp-spiw-catalogo'}, payload))
+    }).catch(()=>{});
+  }
+
+  form.addEventListener('submit', async function(e){
+    e.preventDefault();
+    hide();
+
+    const payload = {
+      nome: form.nome.value.trim(),
+      email: form.email.value.trim(),
+      telefone: form.telefone.value.trim(),
+      empresa: form.empresa.value.trim(),
+      momento: form.momento.value
+    };
+
+    if(!payload.nome || !payload.email || !payload.telefone || !payload.empresa || !payload.momento){
+      show('Preencha todos os campos pra gente seguir.','error');
+      return;
+    }
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)){
+      show('E-mail parece inválido. Confere?','error');
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.querySelector('.btn-label').textContent = 'Enviando…';
+    show('Enviando seus dados…','loading');
+
+    try{
+      // Salva localmente como fallback
+      try{ sessionStorage.setItem('gl_lead', JSON.stringify(payload)); }catch(_){}
+
+      await Promise.allSettled([sendToRD(payload), sendToWebhook(payload)]);
+
+      // Redireciona pra obrigado, levando contexto na URL pra personalizar saudação
+      const qs = new URLSearchParams({
+        nome: payload.nome.split(' ')[0],
+        momento: payload.momento
+      }).toString();
+      window.location.href = CONFIG.REDIRECT_URL + '?' + qs;
+    }catch(err){
+      submitBtn.disabled = false;
+      submitBtn.querySelector('.btn-label').textContent = 'Agendar minha call →';
+      show('Não conseguimos enviar agora. Tenta de novo ou fala direto no WhatsApp.','error');
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
