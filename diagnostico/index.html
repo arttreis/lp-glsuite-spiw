@@ -370,6 +370,54 @@ h2{
   border:1px solid rgba(255,255,255,.2);
 }
 
+/* STAGE MESSAGE — fala antes das tools */
+.stage-msg{
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  padding:2rem;
+  display:grid;gap:1.25rem;
+  position:relative;
+  border-left:3px solid var(--accent);
+}
+.stage-msg .eyebrow{color:var(--accent)}
+.stage-msg .eyebrow::before{background:var(--accent)}
+.stage-msg h3{
+  font-family:var(--font-display);font-weight:900;
+  font-size:clamp(1.375rem,4.8vw,1.75rem);
+  letter-spacing:-.03em;line-height:1.05;margin:0;
+  color:var(--ink);
+}
+.stage-msg .stage-lead{
+  font-size:1rem;color:var(--ink-soft);
+  margin:0;line-height:1.6;font-weight:300;
+}
+.stage-msg .stage-lead strong{color:var(--ink);font-weight:600}
+.stage-points{
+  display:grid;gap:.625rem;
+  list-style:none;padding:0;margin:0;
+  border-top:1px solid var(--rule-soft);padding-top:1.25rem;
+}
+.stage-points li{
+  display:flex;align-items:flex-start;gap:.75rem;
+  font-size:.9375rem;color:var(--ink-soft);
+  line-height:1.5;font-weight:300;
+}
+.stage-points li::before{
+  content:"→";flex:0 0 auto;
+  font-family:var(--font-mono);font-weight:600;
+  color:var(--accent);margin-top:.05rem;
+}
+.stage-points li strong{color:var(--ink);font-weight:600}
+.stage-bridge{
+  font-family:var(--font-mono);font-size:11px;font-weight:500;
+  color:var(--ink-mute);letter-spacing:.18em;text-transform:uppercase;
+  margin:.5rem 0 -.25rem;
+  display:flex;align-items:center;gap:.625rem;
+}
+.stage-bridge::before{
+  content:"";width:24px;height:1px;background:var(--ink-mute);
+}
+
 .recs{display:grid;gap:.75rem}
 .rec{
   background:var(--card-bg);border:1px solid var(--card-border);
@@ -532,6 +580,15 @@ h2{
         <div class="result-pills" id="result-pills"></div>
       </div>
 
+      <div class="stage-msg" id="stageMsg" aria-live="polite">
+        <span class="eyebrow">Sobre o seu momento</span>
+        <h3 id="stage-title">—</h3>
+        <p class="stage-lead" id="stage-lead">—</p>
+        <ul class="stage-points" id="stage-points"></ul>
+      </div>
+
+      <div class="stage-bridge">Por isso, pro seu momento</div>
+
       <div class="recs" id="recs"></div>
 
       <div class="cta-final">
@@ -680,10 +737,50 @@ h2{
   ];
 
   const FASES = {
-    criacao:{nome:'Criação', desc:'Sua empresa está nascendo, trocando posicionamento ou lançando algo novo.'},
-    produtividade:{nome:'Produtividade', desc:'Sua operação roda, mas falta padrão, dado e atendimento que escala.'},
-    performance:{nome:'Performance', desc:'Você é maduro e quer ganhar concorrência: tráfego, SEO e atendimento afinados.'},
-    bi:{nome:'Análise / BI', desc:'Você quer decidir com base em dado, não intuição.'}
+    criacao:{
+      nome:'Criação',
+      desc:'Sua empresa está nascendo, trocando posicionamento ou lançando algo novo.',
+      titulo:'A fase mais definidora do negócio inteiro.',
+      lead:'Tudo que você decidir agora vira <strong>DNA</strong>. Nome, voz, posicionamento, primeira página — vira referência pra cada decisão dos próximos 5 anos. É a fase onde mais vale investir em <strong>clareza</strong>, não em volume.',
+      pontos:[
+        'Resista à pressão de testar tudo. <strong>1 mensagem clara</strong> vence 10 mensagens confusas.',
+        '<strong>Marca não é logo.</strong> É como o cliente fala da sua empresa quando você não está na sala.',
+        'Antes de investir em mídia paga, garanta um destino que <strong>converte</strong> e uma história que <strong>prende</strong>.'
+      ]
+    },
+    produtividade:{
+      nome:'Produtividade',
+      desc:'Sua operação roda, mas falta padrão, dado e atendimento que escala.',
+      titulo:'Bem-vindo à fase que separa empresa de bagunça organizada.',
+      lead:'O caos que você está sentindo <strong>não é problema</strong> — é sintoma de tração. Toda empresa que cresce passa por aqui. A diferença entre as que escalam e as que travam está na disposição de parar pra <strong>estruturar processo</strong> antes de continuar correndo.',
+      pontos:[
+        '<strong>Padrão dói pra implementar.</strong> Mas dói menos do que um lead esfriando por dia.',
+        'Time bom <strong>não compensa</strong> processo ruim. Processo ruim consome time bom.',
+        'O ROI dessa fase é silencioso: você só percebe quando <strong>para de perder oportunidade</strong>.'
+      ]
+    },
+    performance:{
+      nome:'Performance',
+      desc:'Você é maduro e quer ganhar concorrência: tráfego, SEO e atendimento afinados.',
+      titulo:'Você já provou que funciona. Agora é jogo fino.',
+      lead:'Quem chega aqui já sobreviveu ao mais difícil. Daqui pra frente, o jogo é <strong>eficiência marginal</strong> — 1% melhor em 10 lugares vira 10% de vantagem competitiva. É a fase onde dado vence intuição e o concorrente que improvisa fica pra trás.',
+      pontos:[
+        'Você não precisa de <strong>mais canais</strong>. Precisa extrair mais de cada canal que já tem.',
+        'O custo de oportunidade agora é <strong>maior que o custo de tudo</strong>. Cada cliente que escapa custa o LTV inteiro.',
+        'Sua próxima vantagem não vem de novidade. Vem de <strong>afinar o que você já faz</strong>.'
+      ]
+    },
+    bi:{
+      nome:'Análise / BI',
+      desc:'Você quer decidir com base em dado, não intuição.',
+      titulo:'Você chegou onde dado vira vantagem injusta.',
+      lead:'A maioria das empresas decide no <strong>achismo</strong> a vida inteira. Você chegando aqui significa que já tem volume, histórico e maturidade pra transformar dado em decisão. É a fase mais <strong>lucrativa</strong> do negócio — onde 1 insight bem implementado paga uma operação de trimestre.',
+      pontos:[
+        'Dashboard bonito não é dado. <strong>Dado é o que muda decisão</strong> na próxima reunião.',
+        'Mais importante que ter número é saber <strong>qual número parar de olhar</strong>.',
+        'Quem decide com dado não tem mais sorte. Tem <strong>menos azar</strong>.'
+      ]
+    }
   };
 
   const state = {
@@ -867,6 +964,11 @@ h2{
     $('#result-fase').textContent = FASES[fase].nome;
     const pillsHtml = top.map((id, i) => `<span class="result-pill">#${i+1} ${TOOLS[id].nome}</span>`).join('');
     $('#result-pills').innerHTML = pillsHtml;
+
+    const faseData = FASES[fase];
+    $('#stage-title').textContent = faseData.titulo;
+    $('#stage-lead').innerHTML = faseData.lead;
+    $('#stage-points').innerHTML = faseData.pontos.map(p => `<li>${p}</li>`).join('');
 
     let recsHtml = '';
     top.forEach((id, i) => {
