@@ -6,3 +6,7 @@ node_modules/
 .env.local
 *.swp
 Thumbs.db
+
+# PDFs gerados pelo build-pdf.py — ficam fora do repo
+*.pdf
+__pycache__/
