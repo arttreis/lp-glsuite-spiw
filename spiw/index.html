@@ -544,6 +544,31 @@ section{position:relative}
   color:var(--accent);border:1px solid var(--accent-dim);
 }
 
+/* FLOATING WHATSAPP */
+.wa-float{
+  position:fixed;
+  right:1.25rem;bottom:1.25rem;
+  z-index:60;
+  display:inline-flex;align-items:center;gap:.625rem;
+  background:#25D366;color:#fff;
+  border-radius:999px;
+  padding:.875rem 1.125rem .875rem 1rem;
+  font-family:var(--font-body);font-size:13px;font-weight:600;
+  letter-spacing:.02em;
+  box-shadow:0 12px 32px -8px rgba(37,211,102,.55),0 2px 8px rgba(10,10,15,.18);
+  transition:all .35s var(--ease);
+}
+.wa-float:hover,.wa-float:focus-visible{
+  transform:translateY(-3px);
+  box-shadow:0 18px 44px -10px rgba(37,211,102,.65),0 4px 12px rgba(10,10,15,.22);
+}
+.wa-float svg{width:22px;height:22px;flex-shrink:0}
+.wa-float .wa-label{display:none}
+@media (min-width:768px){
+  .wa-float{right:2rem;bottom:2rem;padding:1rem 1.375rem 1rem 1.125rem}
+  .wa-float .wa-label{display:inline}
+}
+
 /* FOOTER */
 .site-footer{
   padding:3rem 0 4rem;
@@ -883,6 +908,11 @@ section{position:relative}
 </section>
 
 </main>
+
+<a class="wa-float" href="https://wa.me/5511910817825?text=Ol%C3%A1!%20Vim%20da%20p%C3%A1gina%20do%20SPIW%20e%20quero%20saber%20mais%20sobre%20a%20GL%20Suite." target="_blank" rel="noopener" aria-label="Fale com a gente no WhatsApp">
+  <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M16.001 3C8.82 3 3 8.82 3 16c0 2.29.6 4.52 1.74 6.49L3 29l6.66-1.74A12.95 12.95 0 0 0 16 29c7.18 0 13-5.82 13-13S23.18 3 16.001 3Zm0 23.6a10.6 10.6 0 0 1-5.4-1.48l-.39-.23-3.96 1.04 1.06-3.86-.25-.4A10.59 10.59 0 1 1 16.001 26.6Zm5.81-7.93c-.32-.16-1.88-.93-2.17-1.03-.29-.11-.5-.16-.71.16-.21.32-.81 1.03-1 1.24-.18.21-.37.24-.69.08-.32-.16-1.34-.49-2.56-1.58-.95-.85-1.59-1.9-1.78-2.22-.18-.32-.02-.49.14-.65.14-.14.32-.37.48-.55.16-.18.21-.32.32-.53.11-.21.05-.4-.03-.55-.08-.16-.71-1.72-.97-2.36-.26-.62-.52-.54-.71-.55h-.61c-.21 0-.55.08-.84.4-.29.32-1.1 1.08-1.1 2.63 0 1.55 1.13 3.05 1.29 3.26.16.21 2.22 3.39 5.38 4.76.75.33 1.34.52 1.8.66.76.24 1.45.21 2 .13.61-.09 1.88-.77 2.15-1.51.27-.74.27-1.37.18-1.51-.08-.13-.29-.21-.61-.37Z"/></svg>
+  <span class="wa-label">Fale com a gente</span>
+</a>
 
 <footer class="site-footer">
   <div class="container">
