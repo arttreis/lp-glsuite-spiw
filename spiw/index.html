@@ -720,7 +720,7 @@ section{position:relative}
       <p class="lede"><span class="accent-bar-h"></span>Cada produto resolve uma dor específica de captação, conversão ou retenção. O especialista te ajuda a montar a combinação certa pra sua operação.</p>
     </div>
     <div class="tools-list">
-      <article class="tool-row">
+      <a class="tool-row" href="/produtos/lpmaker/">
         <span class="tool-num">— 01</span>
         <div class="tool-body">
           <h3>LPMaker</h3>
@@ -729,8 +729,8 @@ section{position:relative}
         </div>
         <span class="tool-tag">Criação</span>
         <span class="tool-arrow" aria-hidden="true">→</span>
-      </article>
-      <article class="tool-row">
+      </a>
+      <a class="tool-row" href="/produtos/brandmeup/">
         <span class="tool-num">— 02</span>
         <div class="tool-body">
           <h3>BrandMeUp</h3>
@@ -739,8 +739,8 @@ section{position:relative}
         </div>
         <span class="tool-tag">Criação</span>
         <span class="tool-arrow" aria-hidden="true">→</span>
-      </article>
-      <article class="tool-row">
+      </a>
+      <a class="tool-row" href="/produtos/gomarketer/">
         <span class="tool-num">— 03</span>
         <div class="tool-body">
           <h3>Go to Marketer</h3>
@@ -749,8 +749,8 @@ section{position:relative}
         </div>
         <span class="tool-tag">Criação</span>
         <span class="tool-arrow" aria-hidden="true">→</span>
-      </article>
-      <article class="tool-row">
+      </a>
+      <a class="tool-row" href="/produtos/gl-forms/">
         <span class="tool-num">— 04</span>
         <div class="tool-body">
           <h3>GL Forms</h3>
@@ -759,8 +759,8 @@ section{position:relative}
         </div>
         <span class="tool-tag">Produtividade</span>
         <span class="tool-arrow" aria-hidden="true">→</span>
-      </article>
-      <article class="tool-row">
+      </a>
+      <a class="tool-row" href="/produtos/dora/">
         <span class="tool-num">— 05</span>
         <div class="tool-body">
           <h3>Dora IA</h3>
@@ -769,8 +769,8 @@ section{position:relative}
         </div>
         <span class="tool-tag">Produtividade</span>
         <span class="tool-arrow" aria-hidden="true">→</span>
-      </article>
-      <article class="tool-row">
+      </a>
+      <a class="tool-row" href="/produtos/atlas/">
         <span class="tool-num">— 06</span>
         <div class="tool-body">
           <h3>Atlas</h3>
@@ -779,8 +779,8 @@ section{position:relative}
         </div>
         <span class="tool-tag">Produtividade</span>
         <span class="tool-arrow" aria-hidden="true">→</span>
-      </article>
-      <article class="tool-row">
+      </a>
+      <a class="tool-row" href="/produtos/seo-insights/">
         <span class="tool-num">— 07</span>
         <div class="tool-body">
           <h3>SEO Insights</h3>
@@ -789,8 +789,8 @@ section{position:relative}
         </div>
         <span class="tool-tag">Performance</span>
         <span class="tool-arrow" aria-hidden="true">→</span>
-      </article>
-      <article class="tool-row">
+      </a>
+      <a class="tool-row" href="/produtos/gl-data/">
         <span class="tool-num">— 08</span>
         <div class="tool-body">
           <h3>GL Data</h3>
@@ -799,7 +799,7 @@ section{position:relative}
         </div>
         <span class="tool-tag">BI</span>
         <span class="tool-arrow" aria-hidden="true">→</span>
-      </article>
+      </a>
     </div>
   </div>
 </section>
@@ -913,8 +913,33 @@ section{position:relative}
     RD_IDENTIFICADOR: 'lp-spiw-catalogo',
     RD_TAGS: ['SPIW','catalogo','agendamento'],
     REDIRECT_URL: 'obrigado.html',
-    WEBHOOK_URL: ''
+    WEBHOOK_URL: '',
+    META_PIXEL_ID: '',
+    GA4_MEASUREMENT_ID: ''
   };
+
+  // ===== TRACKING (Meta Pixel + GA4) =====
+  // Cada bloco só injeta se o ID estiver preenchido. Vazio = no-op.
+  (function initTracking(){
+    if(CONFIG.META_PIXEL_ID){
+      !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', CONFIG.META_PIXEL_ID);
+      fbq('track', 'PageView');
+    }
+    if(CONFIG.GA4_MEASUREMENT_ID){
+      const s = document.createElement('script'); s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=' + CONFIG.GA4_MEASUREMENT_ID;
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function(){ dataLayer.push(arguments); };
+      gtag('js', new Date());
+      gtag('config', CONFIG.GA4_MEASUREMENT_ID);
+    }
+  })();
+  function trackLead(payload){
+    try{ if(window.fbq) fbq('track','Lead',{content_name:'SPIW-LP-Catalogo'}); }catch(_){}
+    try{ if(window.gtag) gtag('event','generate_lead',{source:'lp-spiw-catalogo', momento: payload?.momento || ''}); }catch(_){}
+  }
 
   const form = document.getElementById('leadForm');
   const status = document.getElementById('formStatus');
@@ -992,6 +1017,8 @@ section{position:relative}
       try{ sessionStorage.setItem('gl_lead', JSON.stringify(payload)); }catch(_){}
 
       await Promise.allSettled([sendToRD(payload), sendToWebhook(payload)]);
+
+      trackLead(payload);
 
       const qs = new URLSearchParams({
         nome: payload.nome.split(' ')[0],

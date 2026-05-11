@@ -1,6 +1,6 @@
 # LPs SPIW — GL Suite
 
-Duas landing pages para o evento SPIW (14–16/05). HTML/CSS/JS estático, mobile-first, design herdado de glsuite.com.br.
+Landing pages para o evento SPIW (14–16/05). HTML/CSS/JS estático, mobile-first, design herdado de glsuite.com.br.
 
 ## Estrutura
 
@@ -9,15 +9,40 @@ lp.glsuite.com.br/
 ├── spiw/
 │   ├── index.html          → LP1 (catálogo + form RD Station)
 │   └── obrigado.html       → pós-cadastro com CTA WhatsApp
-└── diagnostico/
-    └── index.html          → LP2 (quiz 8 perguntas → captura → resultado)
+├── diagnostico/
+│   └── index.html          → LP2 (quiz 8 perguntas → captura → resultado)
+├── produtos/               → 8 pitches de produto (6 slides cada)
+│   ├── lpmaker/index.html       (template/spec — editado à mão)
+│   ├── brandmeup/index.html
+│   ├── gomarketer/index.html
+│   ├── gl-forms/index.html
+│   ├── dora/index.html
+│   ├── atlas/index.html
+│   ├── seo-insights/index.html
+│   └── gl-data/index.html
+└── tools/
+    └── build-pitches.py    → regera os 7 pitches a partir do template LPMaker
 ```
 
 URLs finais:
 
-- **LP1**: `https://lp.glsuite.com.br/spiw/`
+- **LP1**: `https://lp.glsuite.com.br/spiw/` — cards do catálogo linkam para `/produtos/<slug>`
 - **Obrigado**: `https://lp.glsuite.com.br/spiw/obrigado.html`
 - **LP2**: `https://lp.glsuite.com.br/diagnostico/`
+- **Pitches**: `https://lp.glsuite.com.br/produtos/<slug>` — slugs: `lpmaker`, `brandmeup`, `gomarketer`, `gl-forms`, `dora`, `atlas`, `seo-insights`, `gl-data`
+
+## Pitches de produto (6 slides cada)
+
+Cada pitch é uma página de 1 arquivo (`produtos/<slug>/index.html`) com scroll-snap vertical e rail lateral de 6 dots. Estrutura dos slides:
+
+1. **Abertura** — nome do produto, headline com accent, lead curta, badge da frente (Criação · Produtividade · Performance · BI)
+2. **Problema** — 3 dores específicas que aquela ferramenta resolve
+3. **Solução** — pitch core + 3 pilares
+4. **Como Funciona** — 3 passos numerados em cards
+5. **Ganho Prático** — stat grande + body explicando o impacto
+6. **Fechamento** — CTA WhatsApp pré-preenchido com mensagem contextual do produto + agendar call
+
+**Para editar o conteúdo dos pitches**, edite o dict `PRODUCTS` em `tools/build-pitches.py` e rode `python tools/build-pitches.py`. O LPMaker é o template/spec e é editado à mão — qualquer mudança estrutural (CSS, JS, layout) deve começar nele e depois rodar o script pra propagar.
 
 ## Antes de subir — checklist obrigatório
 
@@ -83,13 +108,27 @@ Tokens herdados de `glsuite.com.br`:
 
 CSS é inline em cada HTML pra simplicidade de deploy. Sem build step.
 
-## Tracking (deixado pronto, configurar depois)
+## Tracking (Meta Pixel + GA4) — estrutura cabeada, basta plugar IDs
 
-Pontos de hook prontos pra Meta Pixel / GA4:
+Os 3 HTMLs já têm loader, `PageView` e eventos de conversão prontos. Sem IDs preenchidos, nada dispara (no-op).
 
-- LP1: `submit` do form → adicione `fbq('track','Lead')` antes do redirect
-- LP2: `showScreen('result')` → adicione `fbq('track','CompleteRegistration')` antes do `renderResult()`
-- LP2: cliques em `.option` → adicione tracking de progresso por etapa
+Pra ativar, preencher em cada arquivo:
+
+```js
+META_PIXEL_ID: 'SEU_PIXEL_ID',
+GA4_MEASUREMENT_ID: 'G-XXXXXXXXXX'
+```
+
+| Arquivo | Eventos disparados |
+|---|---|
+| `spiw/index.html` | `PageView` no load · `Lead` no submit |
+| `spiw/obrigado.html` | `PageView` + `Lead` no load (página de conversão) |
+| `diagnostico/index.html` | `PageView` · `QuizStart` (custom) · `CompleteRegistration` + `Lead` no submit do captureForm |
+| `produtos/<slug>/index.html` (×8) | `PageView` · `ProductPitchView` (custom) · `PitchSlideView` por slide visto · `Contact` no click do WhatsApp |
+
+GA4 dispara `generate_lead`, `quiz_start`, `product_pitch_view`, `pitch_slide_view` e `contact` nos mesmos pontos, com metadata (`momento`, `fase`, `top1`, `product`, `slide`).
+
+> Como o template é replicado nas 8 páginas via `tools/build-pitches.py`, depois de plugar os IDs no LPMaker basta rodar o script pra propagar para os outros 7 produtos.
 
 UTMs são preservadas automaticamente porque nada redireciona — funciona bem com qualquer parâmetro vindo do Instagram.
 

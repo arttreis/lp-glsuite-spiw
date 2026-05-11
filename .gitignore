@@ -10,3 +10,6 @@ Thumbs.db
 # PDFs gerados pelo build-pdf.py — ficam fora do repo
 *.pdf
 __pycache__/
+
+# Config local da harness Claude Code (preview server, etc.)
+.claude/
