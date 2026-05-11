@@ -324,6 +324,25 @@ h1 .accent{
 
 <script>
 (function(){
+  // ===== TRACKING (Meta Pixel + GA4) =====
+  const TRACK = { META_PIXEL_ID: '', GA4_MEASUREMENT_ID: '' };
+  if(TRACK.META_PIXEL_ID){
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', TRACK.META_PIXEL_ID);
+    fbq('track','PageView');
+    fbq('track','Lead',{content_name:'SPIW-LP-Catalogo-Obrigado'});
+  }
+  if(TRACK.GA4_MEASUREMENT_ID){
+    const s = document.createElement('script'); s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + TRACK.GA4_MEASUREMENT_ID;
+    document.head.appendChild(s);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function(){ dataLayer.push(arguments); };
+    gtag('js', new Date());
+    gtag('config', TRACK.GA4_MEASUREMENT_ID);
+    gtag('event','conversion_thankyou',{source:'lp-spiw-catalogo'});
+  }
+
   const params = new URLSearchParams(window.location.search);
   const nome = params.get('nome');
   if(nome){

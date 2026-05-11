@@ -624,8 +624,38 @@ h2{
     RD_IDENTIFICADOR:'lp-spiw-diagnostico',
     RD_TAGS:['SPIW','diagnostico','quiz'],
     WEBHOOK_URL:'',
-    WHATSAPP_NUMBER:'5511910817825'
+    WHATSAPP_NUMBER:'5511910817825',
+    META_PIXEL_ID:'',
+    GA4_MEASUREMENT_ID:''
   };
+
+  // ===== TRACKING (Meta Pixel + GA4) =====
+  // Cada bloco só injeta se o ID estiver preenchido. Vazio = no-op.
+  (function initTracking(){
+    if(CONFIG.META_PIXEL_ID){
+      !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', CONFIG.META_PIXEL_ID);
+      fbq('track','PageView');
+    }
+    if(CONFIG.GA4_MEASUREMENT_ID){
+      const s = document.createElement('script'); s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=' + CONFIG.GA4_MEASUREMENT_ID;
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function(){ dataLayer.push(arguments); };
+      gtag('js', new Date());
+      gtag('config', CONFIG.GA4_MEASUREMENT_ID);
+    }
+  })();
+  function trackQuizStart(){
+    try{ if(window.fbq) fbq('trackCustom','QuizStart',{content_name:'SPIW-LP-Diagnostico'}); }catch(_){}
+    try{ if(window.gtag) gtag('event','quiz_start',{source:'lp-spiw-diagnostico'}); }catch(_){}
+  }
+  function trackCompleteRegistration(payload){
+    try{ if(window.fbq) fbq('track','CompleteRegistration',{content_name:'SPIW-LP-Diagnostico'}); }catch(_){}
+    try{ if(window.fbq) fbq('track','Lead',{content_name:'SPIW-LP-Diagnostico'}); }catch(_){}
+    try{ if(window.gtag) gtag('event','generate_lead',{source:'lp-spiw-diagnostico', fase: payload?.fase || '', top1: payload?.top?.[0] || ''}); }catch(_){}
+  }
 
   const TOOLS = {
     'lpmaker':{nome:'LPMaker', tag:'Criação', lead:'Landing pages que convertem.', url:'https://wa.me/5511910817825?text=Tenho%20interesse%20na%20ferramenta%20LPMaker'},
@@ -1067,6 +1097,8 @@ h2{
     try{ sessionStorage.setItem('gl_diagnostico_lead', JSON.stringify(fullPayload)); }catch(_){}
     await Promise.allSettled([sendToRD(fullPayload), sendToWebhook(fullPayload)]);
 
+    trackCompleteRegistration(fullPayload);
+
     showScreen('result');
     renderResult();
   });
@@ -1076,7 +1108,7 @@ h2{
     if(!btn) return;
     const action = btn.dataset.action;
 
-    if(action === 'start'){ state.qIndex = 0; showScreen('question'); }
+    if(action === 'start'){ state.qIndex = 0; trackQuizStart(); showScreen('question'); }
     if(action === 'next'){
       if(state.qIndex < QUESTIONS.length - 1){
         state.qIndex++;

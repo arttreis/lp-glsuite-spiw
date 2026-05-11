@@ -13,6 +13,7 @@ Duas LPs estão construídas, no GitHub e no ar na Vercel. Falta substituir o `R
 | **LP1 — catálogo** | https://lp-glsuite-spiw.vercel.app/spiw |
 | **LP2 — diagnóstico** | https://lp-glsuite-spiw.vercel.app/diagnostico |
 | **Página obrigado LP1** | https://lp-glsuite-spiw.vercel.app/spiw/obrigado |
+| **Pitches por produto** | `/produtos/<slug>` (8 páginas — slugs: `lpmaker`, `brandmeup`, `gomarketer`, `gl-forms`, `dora`, `atlas`, `seo-insights`, `gl-data`) |
 
 Auto-deploy ativo: qualquer `git push origin main` sobe automaticamente em produção em ~30s.
 
@@ -48,9 +49,10 @@ Mas o caminho normal é só `git push` que a Vercel redeploya sozinha.
 
 ### O que está pronto
 
-- [x] LP1 (`spiw/index.html`) — hero, 4 frentes, catálogo das 8 ferramentas à venda, form com validação, máscara de telefone, redirect para obrigado.
+- [x] LP1 (`spiw/index.html`) — hero, 4 frentes, catálogo das 8 ferramentas à venda (cada card linka para `/produtos/<slug>`), form com validação, máscara de telefone, redirect para obrigado.
 - [x] Página obrigado (`spiw/obrigado.html`) — saudação personalizada via query string, botão WhatsApp pré-preenchido com nome e fase.
 - [x] LP2 (`diagnostico/index.html`) — quiz de 8 perguntas, scoring ponderado, tela de captura, tela de resultado com top 3 ferramentas + CTA WhatsApp personalizado.
+- [x] **Pitches de produto** (`produtos/<slug>/index.html`) — 8 páginas, uma por ferramenta. Cada pitch tem 6 slides com scroll-snap vertical: Abertura · Problema · Solução · Como Funciona · Ganho Prático · Fechamento. CTA WhatsApp contextualizado por produto. Rail lateral de progresso com 6 dots. Mesmo design system da Suite.
 - [x] Design system inline herdado de glsuite.com.br (Montserrat / DM Sans / accent `#0014ff` / radius `0.5rem`).
 - [x] Mobile-first com breakpoints `680px` e `980px`.
 - [x] `vercel.json` com clean URLs, security headers, cache de HTML.
@@ -103,15 +105,34 @@ No painel do RD Station:
 
 Alternativa: preencher `WEBHOOK_URL` no `CONFIG` de cada LP (atualmente vazio), apontando pra um webhook próprio (ex.: n8n) que faz e-mail + WhatsApp. As LPs já estão preparadas pra disparar em paralelo.
 
-#### 4. Tracking (Meta Pixel + GA4)
+#### 4. Tracking (Meta Pixel + GA4) — estrutura pronta, só plugar IDs
 
-Pontos de hook documentados no `README.md`. Resumindo:
+A estrutura completa (loader, PageView, eventos de conversão) já está nos 3 HTMLs, gateada pelo `CONFIG`. Com IDs vazios, nada dispara — zero risco.
 
-- **LP1** (`spiw/index.html`): adicionar `fbq('track','Lead')` antes do `window.location.href = CONFIG.REDIRECT_URL...` no submit handler.
-- **LP2** (`diagnostico/index.html`): adicionar `fbq('track','CompleteRegistration')` antes do `renderResult()` no submit handler do `captureForm`.
-- **GA4**: incluir o snippet padrão no `<head>` de ambas as LPs e disparar `gtag('event','generate_lead')` nos mesmos pontos.
+**Para ativar**: colar os IDs em 3 arquivos:
 
-Adicionar o pixel no `<head>` de cada HTML se ainda não tiver script global de tag manager.
+| Arquivo | Variáveis |
+|---|---|
+| `spiw/index.html` | `CONFIG.META_PIXEL_ID` e `CONFIG.GA4_MEASUREMENT_ID` |
+| `spiw/obrigado.html` | `TRACK.META_PIXEL_ID` e `TRACK.GA4_MEASUREMENT_ID` |
+| `diagnostico/index.html` | `CONFIG.META_PIXEL_ID` e `CONFIG.GA4_MEASUREMENT_ID` |
+
+GA4 ID tem formato `G-XXXXXXXXXX`. Pixel ID é numérico (~15 dígitos).
+
+**Eventos já cabeados**:
+
+- **LP1**: `PageView` no load · `Lead` no submit do form (antes do redirect).
+- **LP1 Obrigado**: `PageView` + `Lead` no load (página de conversão) · `gtag conversion_thankyou`.
+- **LP2**: `PageView` no load · `QuizStart` (custom) ao clicar começar · `CompleteRegistration` + `Lead` no submit do captureForm.
+- **GA4**: `generate_lead` (LP1 e LP2) e `quiz_start` (LP2) disparados nos mesmos pontos, com metadados (`momento`, `fase`, `top1`).
+
+Depois de colar os IDs:
+
+```bash
+git add spiw/index.html spiw/obrigado.html diagnostico/index.html
+git commit -m "tracking: ativar Meta Pixel + GA4"
+git push
+```
 
 ## Mapa do código — onde mexer em cada coisa
 
@@ -119,6 +140,8 @@ Adicionar o pixel no `<head>` de cada HTML se ainda não tiver script global de 
 |---|---|
 | Headline ou copy da LP1 | `spiw/index.html` → `<section class="hero">` |
 | Lista das ferramentas (cards) | `spiw/index.html` → `<section id="ferramentas">` |
+| Conteúdo de um pitch de produto | `produtos/<slug>/index.html` (cada slide é uma `<section class="slide">`) |
+| Regerar os 7 pitches a partir do template | editar `tools/build-pitches.py` (dict `PRODUCTS`) e rodar `python tools/build-pitches.py` — sobrescreve os 7 arquivos. O LPMaker serve como template/spec, não é gerado pelo script. |
 | Pergunta ou opção do quiz | `diagnostico/index.html` → array `QUESTIONS` no JS |
 | Pesos do scoring do quiz | `diagnostico/index.html` → propriedade `score` ou `absent` em cada option, ou `weight` da pergunta |
 | Catálogo + URLs das ferramentas no resultado | `diagnostico/index.html` → objeto `TOOLS` no JS |
@@ -157,8 +180,20 @@ lp-glsuite-spiw/
 ├── spiw/
 │   ├── index.html       → LP1
 │   └── obrigado.html    → pós-cadastro LP1
-└── diagnostico/
-    └── index.html       → LP2 (quiz + captura + resultado)
+├── diagnostico/
+│   └── index.html       → LP2 (quiz + captura + resultado)
+├── produtos/            → 8 pitches de produto (6 slides cada)
+│   ├── lpmaker/index.html       → template/spec — editado à mão
+│   ├── brandmeup/index.html
+│   ├── gomarketer/index.html
+│   ├── gl-forms/index.html
+│   ├── dora/index.html
+│   ├── atlas/index.html
+│   ├── seo-insights/index.html
+│   └── gl-data/index.html
+├── tools/
+│   └── build-pitches.py → gera os 7 pitches a partir do LPMaker
+└── build-pdf.py         → script PDF do diagnostico
 ```
 
 ## Comandos úteis
@@ -196,10 +231,10 @@ vercel logs lp-glsuite-spiw --prod
 
 Quando voltar:
 
-1. Pegar token do RD Station e substituir nos dois HTMLs (5 min).
+1. ~~Pegar token do RD Station e substituir nos dois HTMLs.~~ ✅ feito (commit `cd82e0e`).
 2. Adicionar `lp.glsuite.com.br` no Vercel Domains (5 min + propagação DNS).
 3. Configurar workflow do RD Station pra alertar (15 min).
-4. Adicionar pixel/GA4 (15 min).
+4. Plugar `META_PIXEL_ID` e `GA4_MEASUREMENT_ID` no `CONFIG` dos 3 HTMLs (estrutura pronta, ver seção 4 acima — 2 min).
 5. Validar fluxo end-to-end no celular (preencher form, ver e-mail chegar, abrir WhatsApp do CTA).
 
-Tempo total estimado: 1h pra deixar tudo no ar pronto pro evento.
+Tempo total estimado: 40 min pra deixar tudo no ar pronto pro evento.
